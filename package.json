@@ -1,0 +1,103 @@
+{
+  "name": "evokore-mcp",
+  "version": "3.1.0",
+  "description": "Multi-server MCP aggregator with skill discovery, HITL approval, RBAC, and session continuity",
+  "main": "dist/index.js",
+  "files": [
+    "dist/",
+    "mcp.config.json",
+    "voices.json",
+    "damage-control-rules.yaml",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattmre/EVOKORE-MCP-PUBLIC.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mattmre/EVOKORE-MCP-PUBLIC/issues"
+  },
+  "homepage": "https://github.com/mattmre/EVOKORE-MCP-PUBLIC#readme",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "setup": "node scripts/evokore-init.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "build": "npx tsc",
+    "prepack": "npm run build",
+    "evokore:init": "node scripts/evokore-init.js",
+    "repo:audit": "node scripts/repo-state-audit.js",
+    "skill-graph": "node scripts/derive-skill-composition.js",
+    "wiki:build": "node scripts/build-wiki.js",
+    "wiki:validate": "node scripts/validate-wiki-bhs.js",
+    "validate:issues": "node scripts/validate-issue-metadata.js",
+    "benchmark:tool-discovery": "node scripts/benchmark-tool-discovery.js",
+    "voice": "node dist/VoiceSidecar.js",
+    "voice:dev": "npx tsx src/VoiceSidecar.ts",
+    "release:preflight": "node scripts/release-preflight.js",
+    "sync": "node scripts/sync-configs.js --apply",
+    "sync:dry": "node scripts/sync-configs.js --dry-run",
+    "replay": "node scripts/session-replay-view.js --latest",
+    "hooks:view": "node scripts/hook-log-view.js",
+    "dashboard": "node scripts/dashboard.js",
+    "bench": "node scripts/benchmark.js",
+    "docs:api": "typedoc",
+    "worktree:cleanup": "node scripts/worktree-cleanup.js --dry-run",
+    "worktree:cleanup:apply": "node scripts/worktree-cleanup.js --apply",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "changelog:full": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "aggregator",
+    "multi-server",
+    "skills",
+    "hitl",
+    "rbac",
+    "claude",
+    "ai-tools"
+  ],
+  "author": "EVOKORE",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "commander": "^14.0.3",
+    "dotenv": "^17.3.1",
+    "fuse.js": "7.1.0",
+    "jose": "^6.2.1",
+    "js-tiktoken": "^1.0.21",
+    "ws": "^8.19.0",
+    "yaml": "^2.8.2",
+    "zod": "^4.3.6"
+  },
+  "overrides": {
+    "@hono/node-server": "^1.19.11",
+    "express-rate-limit": "^8.3.1",
+    "hono": "^4.12.7",
+    "path-to-regexp": "^8.4.0"
+  },
+  "optionalDependencies": {
+    "ioredis": "^5.4.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "@types/node": "^25.3.0",
+    "@types/ws": "^8.18.1",
+    "@vitest/coverage-v8": "^4.1.0",
+    "conventional-changelog-cli": "^5.0.0",
+    "tsx": "^4.21.0",
+    "typedoc": "^0.28.17",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
+  }
+}

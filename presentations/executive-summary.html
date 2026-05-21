@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EVOKORE-MCP — Executive Summary</title>
+<meta name="description" content="A non-technical overview of EVOKORE-MCP: what it is, why it exists, who it's for, and what it unlocks." />
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-dot" aria-hidden="true"></span>EVOKORE-MCP<small>presentations</small></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html" data-nav="index.html">Home</a>
+      <a href="executive-summary.html" data-nav="executive-summary.html">Executive</a>
+      <a href="technical-analysis.html" data-nav="technical-analysis.html">Technical</a>
+      <a href="panel-of-experts.html" data-nav="panel-of-experts.html">Panel</a>
+      <a href="arch-aep-system.html" data-nav="arch-aep-system.html">AEP</a>
+      <a href="skill-spotlights.html" data-nav="skill-spotlights.html">Skills</a>
+      <a href="workflows.html" data-nav="workflows.html">Workflows</a>
+      <a class="repo" href="../README.md">Back to repo</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-intro">
+    <div class="kicker">Executive summary</div>
+    <h1>One MCP endpoint. Many tools. Strong guardrails.</h1>
+    <p>EVOKORE-MCP collapses multiple AI tool servers into a single, controlled, observable endpoint. It lets a small team get the productivity of dozens of integrations without losing the safety, repeatability, and operator visibility that an enterprise needs.</p>
+  </section>
+
+  <div class="two-col">
+    <div>
+
+      <section>
+        <h2>What it is, in plain English</h2>
+        <p>Modern AI assistants like Claude, Cursor, and Gemini use a protocol called <strong>MCP</strong> (Model Context Protocol) to call tools — read files, search code, post to Slack, run a build. Each tool provider runs its own MCP server. Teams quickly end up with five, ten, or fifteen of them, each with its own configuration, permissions, and failure modes.</p>
+        <p>EVOKORE-MCP sits in front of those servers and presents <strong>one</strong> endpoint to the AI client. It does three things very deliberately:</p>
+        <ul class="checklist">
+          <li>Combines many tool servers into a single namespace, with safe, prefixed tool names that never collide.</li>
+          <li>Adds a human-in-the-loop approval step for any tool flagged as sensitive — no silent destructive actions.</li>
+          <li>Records every tool call, evidence artifact, and session purpose so the work is auditable and resumable.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Why it exists</h2>
+        <p>Three problems show up repeatedly when an organization adopts AI agents:</p>
+        <div class="grid">
+          <div class="card">
+            <span class="badge">Sprawl</span>
+            <h3>Too many endpoints</h3>
+            <p class="muted">Each new integration ships its own MCP server. The AI client juggles connections, retries, and config files. EVOKORE collapses them to one.</p>
+          </div>
+          <div class="card">
+            <span class="badge">Cost</span>
+            <h3>Too much tool context</h3>
+            <p class="muted">Listing 300 tools eats the AI's context window. EVOKORE's dynamic discovery mode shows the tools the session actually needs.</p>
+          </div>
+          <div class="card">
+            <span class="badge">Risk</span>
+            <h3>Too little control</h3>
+            <p class="muted">Letting an agent rename files, delete branches, or post to production is a governance gap. EVOKORE adds approval tokens, rate limits, and role-based access.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Who it is for</h2>
+        <p>EVOKORE-MCP is built for the operator and the technical lead, not the casual user. Common profiles:</p>
+        <div class="grid">
+          <div class="card">
+            <span class="badge slate">Engineering team</span>
+            <h3>Long-running repo work</h3>
+            <p class="muted">Teams that want AI to participate in real refactors, bug triage, and review — with the same audit trail a human PR gets.</p>
+          </div>
+          <div class="card">
+            <span class="badge slate">Solo operator</span>
+            <h3>Multi-tool power user</h3>
+            <p class="muted">Anyone running Claude, Cursor, or Codex with more than three integrations who is tired of config drift and silent breakage.</p>
+          </div>
+          <div class="card">
+            <span class="badge slate">Platform team</span>
+            <h3>Tooling consolidator</h3>
+            <p class="muted">Platform engineers who need a place to enforce permission, rate-limit, and approval policy across every AI tool the company uses.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Top five features</h2>
+        <ol>
+          <li><strong>One endpoint, many tools.</strong> Combine GitHub, filesystem, voice, database, and other MCP servers behind a single namespace with collision-safe prefixed names.</li>
+          <li><strong>Dynamic tool discovery.</strong> Choose between a full tool listing for compatibility, or a session-scoped activation flow that keeps the AI's context lean.</li>
+          <li><strong>Human-in-the-loop approval.</strong> Any tool tagged as sensitive returns an approval token instead of running. The AI asks the human, then retries with the token. No silent destructive actions.</li>
+          <li><strong>Role-based access control.</strong> Three roles — admin, developer, readonly — backed by a flat permissions file. Backwards-compatible with simple setups.</li>
+          <li><strong>Session continuity.</strong> A session manifest, replay log, evidence log, and task list under <code>~/.evokore/</code> mean a session can be paused, resumed, audited, and explained without losing context.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Top use cases</h2>
+        <div class="grid-2">
+          <div class="card">
+            <span class="badge">Engineering</span>
+            <h3>Refactor a module with a panel review</h3>
+            <p class="muted">Ingest the repo, send the candidate module to the architecture panel, apply the recommendations, and ship through a PR-manager workflow — all from one chat.</p>
+          </div>
+          <div class="card">
+            <span class="badge">Engineering</span>
+            <h3>Triage a production bug end to end</h3>
+            <p class="muted">Triage the bug from session evidence, write a failing test, fix the code, and produce a PR with the verification log already attached.</p>
+          </div>
+          <div class="card">
+            <span class="badge alt">Planning</span>
+            <h3>Turn a rough idea into shippable issues</h3>
+            <p class="muted">Synthesize a PRD from prior session evidence, run the planning panel against it, and decompose into vertical-slice issues with explicit accept criteria.</p>
+          </div>
+          <div class="card">
+            <span class="badge alt">Research</span>
+            <h3>Run a research review with diverse personas</h3>
+            <p class="muted">Convene a four-expert panel against a research artifact, capture challenges and concessions, and persist the result as a dated review for the team archive.</p>
+          </div>
+          <div class="card">
+            <span class="badge green">Operations</span>
+            <h3>Approve sensitive actions safely</h3>
+            <p class="muted">Configure the filesystem and GitHub writers as approval-required, then let the AI propose changes. Every destructive call is gated and logged.</p>
+          </div>
+          <div class="card">
+            <span class="badge purple">Knowledge</span>
+            <h3>Find the right workflow in 5 seconds</h3>
+            <p class="muted">Ask "I need to wrap this session cleanly" and EVOKORE resolves the matching skill, explains why it matched, and injects the steps directly into the response.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <aside>
+
+      <div class="bhk">
+        <h3>What new users trip on</h3>
+        <ol>
+          <li><strong>Node 18+ is required.</strong> Older versions silently misbehave because the MCP SDK depends on modern Node features. <span class="severity" data-sev="5">SEV 5</span></li>
+          <li><strong>Child servers boot in the background.</strong> The AI handshake completes before the proxied tools are ready. First-second calls may not find them. <span class="severity" data-sev="4">SEV 4</span></li>
+          <li><strong>Default discovery is now <code>dynamic</code>.</strong> In v3.1+ the legacy full tool listing is opt-in. Set <code>EVOKORE_TOOL_DISCOVERY_MODE=legacy</code> if a client expects every tool visible up front. <span class="severity" data-sev="4">SEV 4</span></li>
+          <li><strong>Approval tokens are one-shot and arg-bound.</strong> Retry must use the exact same arguments. Changing a single character invalidates the token. <span class="severity" data-sev="3">SEV 3</span></li>
+          <li><strong>Tests use vitest now, not the old <code>node test-*.js</code> chains.</strong> Run <code>npx vitest run</code> instead of the legacy entry points. <span class="severity" data-sev="3">SEV 3</span></li>
+          <li><strong>Voice and dashboard run on separate ports.</strong> The sidecar is on <code>:8888</code>, the dashboard on <code>:8899</code>. Conflict with another local service and they will fail to bind. <span class="severity" data-sev="3">SEV 3</span></li>
+          <li><strong>Optional child servers need their own keys.</strong> ElevenLabs, Supabase, and similar integrations are disabled until their API keys exist in <code>.env</code>. <span class="severity" data-sev="2">SEV 2</span></li>
+        </ol>
+      </div>
+
+      <section>
+        <h2>At a glance</h2>
+        <div class="stat-row">
+          <div class="stat"><div class="num">37</div><div class="label">Native tools</div></div>
+          <div class="stat"><div class="num">10</div><div class="label">Managers</div></div>
+          <div class="stat"><div class="num">266</div><div class="label">Skills indexed</div></div>
+          <div class="stat"><div class="num">16</div><div class="label">Skill categories</div></div>
+        </div>
+        <p class="muted" style="font-size:13px">Numbers reflect the v3.1.0 runtime as shipped. Skills can be added at any time and are picked up by hot reload.</p>
+      </section>
+
+      <section>
+        <h2>What's not in scope</h2>
+        <p>EVOKORE-MCP is intentionally narrow. It does <em>not</em> try to:</p>
+        <ul class="checklist">
+          <li>Replace the AI client. It runs underneath whatever client a team already uses.</li>
+          <li>Train or fine-tune models.</li>
+          <li>Provide a hosted SaaS — it's a local process for now.</li>
+          <li>Cover non-MCP integrations directly. Those have to be wrapped as an MCP server first.</li>
+        </ul>
+      </section>
+
+    </aside>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>Last built: 2026-05-20</span>
+    <span><a href="../wiki/index.html">Skill wiki</a> &middot; <a href="../README.md">EVOKORE-MCP repo</a></span>
+  </div>
+</footer>
+
+<script src="assets/diagrams.js"></script>
+</body>
+</html>

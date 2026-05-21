@@ -1,0 +1,142 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: TypeScript type check
+        run: npx tsc --noEmit
+
+  manifest-drift:
+    name: README manifest drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # Pure Node.js script — no dependencies, no install step needed.
+      - name: Check README version + native tool count match source of truth
+        run: node scripts/check-readme-manifest-drift.js
+
+  test:
+    name: Test Suite (shard ${{ matrix.shard }}/3)
+    needs: [build]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Validate submodule cleanliness
+        run: node scripts/validate-submodule-cleanliness.js
+
+      - name: Check for nested .git artifacts
+        run: node scripts/check-no-nested-git.js
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Validate PR metadata
+        if: github.event_name == 'pull_request' && matrix.shard == 1
+        run: node scripts/validate-pr-metadata.js
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run tests (shard ${{ matrix.shard }}/3)
+        run: npx vitest run --shard=${{ matrix.shard }}/3
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Normalize Skills Frontmatter
+        run: node scripts/clean_skills.js
+
+      - name: Build TypeScript
+        run: npm run build
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
+
+  windows-runtime:
+    name: Windows Runtime Validation
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Validate submodule cleanliness
+        run: node scripts/validate-submodule-cleanliness.js
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build TypeScript
+        run: npm run build
+
+      - name: Run Windows-specific tests
+        run: npx vitest run test-windows-exec-validation.js test-windows-command-runtime-validation.ts

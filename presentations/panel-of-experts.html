@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EVOKORE-MCP — Panel of Experts</title>
+<meta name="description" content="The Panel of Experts framework: 10-step cycle, depth modes, persona schema, and worked examples." />
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-dot" aria-hidden="true"></span>EVOKORE-MCP<small>presentations</small></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html" data-nav="index.html">Home</a>
+      <a href="executive-summary.html" data-nav="executive-summary.html">Executive</a>
+      <a href="technical-analysis.html" data-nav="technical-analysis.html">Technical</a>
+      <a href="panel-of-experts.html" data-nav="panel-of-experts.html">Panel</a>
+      <a href="arch-aep-system.html" data-nav="arch-aep-system.html">AEP</a>
+      <a href="skill-spotlights.html" data-nav="skill-spotlights.html">Skills</a>
+      <a href="workflows.html" data-nav="workflows.html">Workflows</a>
+      <a class="repo" href="../README.md">Back to repo</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-intro">
+    <div class="kicker">Top-tier feature spotlight</div>
+    <h1>Panel of Experts</h1>
+    <p>The Panel of Experts framework drives refinement and creative insight by assembling virtual expert panels. Each panelist adopts a defined professional persona — years of experience, past project context, blind spots, and a review lens. Generic analysis applies generic heuristics; a Senior Reliability Engineer who has been paged at 3am catches different problems than an Enterprise Architect who has seen three failed migrations.</p>
+  </section>
+
+  <section>
+    <h2>The 10-step cycle</h2>
+    <p>Every panel review walks this same loop. Steps 5 and 6 are conditional on the chosen depth.</p>
+
+    <div class="diagram" role="figure" aria-labelledby="diag-cycle-caption">
+      <svg viewBox="0 0 760 460" width="760" height="460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The 10-step panel cycle from CONVENE through PERSIST, arranged in a clockwise circle">
+        <defs>
+          <marker id="ringArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+          </marker>
+        </defs>
+
+        <!-- Center label -->
+        <circle cx="380" cy="230" r="78" fill="#0f172a" />
+        <text x="380" y="220" text-anchor="middle" fill="#fff" font-family="system-ui" font-size="16" font-weight="700">PANEL CYCLE</text>
+        <text x="380" y="240" text-anchor="middle" fill="#94a3b8" font-family="system-ui" font-size="11">CONVENE → PERSIST</text>
+        <text x="380" y="258" text-anchor="middle" fill="#cbd5e1" font-family="system-ui" font-size="11">10 steps, 4+ experts</text>
+
+        <!-- 10 nodes positioned around the circle -->
+        <!-- Each node: circle with number, text label below -->
+        <g font-family="system-ui">
+          <!-- 1 CONVENE  top -->
+          <circle cx="380" cy="56" r="32" fill="#3b82f6" />
+          <text x="380" y="50" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">1</text>
+          <text x="380" y="68" text-anchor="middle" fill="#fff" font-size="11">CONVENE</text>
+          <text x="380" y="100" text-anchor="middle" fill="#0f172a" font-size="11">Select panel composition</text>
+
+          <!-- 2 BRIEF  ~36deg -->
+          <circle cx="538" cy="100" r="32" fill="#3b82f6" />
+          <text x="538" y="94" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">2</text>
+          <text x="538" y="112" text-anchor="middle" fill="#fff" font-size="11">BRIEF</text>
+          <text x="538" y="146" text-anchor="middle" fill="#0f172a" font-size="11">Present the artifact</text>
+
+          <!-- 3 SOLO -->
+          <circle cx="638" cy="194" r="32" fill="#3b82f6" />
+          <text x="638" y="188" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">3</text>
+          <text x="638" y="206" text-anchor="middle" fill="#fff" font-size="11">SOLO</text>
+          <text x="638" y="240" text-anchor="middle" fill="#0f172a" font-size="11">Independent reviews</text>
+
+          <!-- 4 CHALLENGE -->
+          <circle cx="638" cy="294" r="32" fill="#3b82f6" />
+          <text x="638" y="288" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">4</text>
+          <text x="638" y="306" text-anchor="middle" fill="#fff" font-size="11">CHALLENGE</text>
+          <text x="638" y="340" text-anchor="middle" fill="#0f172a" font-size="11">Experts push back</text>
+
+          <!-- 5 COUNCIL  (depth>=3 only) -->
+          <circle cx="538" cy="372" r="32" fill="#8b5cf6" />
+          <text x="538" y="366" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">5</text>
+          <text x="538" y="384" text-anchor="middle" fill="#fff" font-size="11">COUNCIL</text>
+          <text x="538" y="412" text-anchor="middle" fill="#6d28d9" font-size="10">(depth ≥ 3 only)</text>
+
+          <!-- 6 CONCESSION (depth=5 only) -->
+          <circle cx="380" cy="408" r="32" fill="#8b5cf6" />
+          <text x="380" y="402" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">6</text>
+          <text x="380" y="420" text-anchor="middle" fill="#fff" font-size="11">CONCESSION</text>
+          <text x="380" y="448" text-anchor="middle" fill="#6d28d9" font-size="10">(depth = 5 only)</text>
+
+          <!-- 7 CONVERGE -->
+          <circle cx="222" cy="372" r="32" fill="#3b82f6" />
+          <text x="222" y="366" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">7</text>
+          <text x="222" y="384" text-anchor="middle" fill="#fff" font-size="11">CONVERGE</text>
+          <text x="222" y="412" text-anchor="middle" fill="#0f172a" font-size="11">Stack-rank findings</text>
+
+          <!-- 8 FEASIBILITY -->
+          <circle cx="122" cy="294" r="32" fill="#3b82f6" />
+          <text x="122" y="288" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">8</text>
+          <text x="122" y="306" text-anchor="middle" fill="#fff" font-size="11">FEASIBILITY</text>
+          <text x="122" y="340" text-anchor="middle" fill="#0f172a" font-size="11">Final gate</text>
+
+          <!-- 9 DELIVER -->
+          <circle cx="122" cy="194" r="32" fill="#3b82f6" />
+          <text x="122" y="188" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">9</text>
+          <text x="122" y="206" text-anchor="middle" fill="#fff" font-size="11">DELIVER</text>
+          <text x="122" y="240" text-anchor="middle" fill="#0f172a" font-size="11">Final report</text>
+
+          <!-- 10 PERSIST -->
+          <circle cx="222" cy="100" r="32" fill="#10b981" />
+          <text x="222" y="94" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">10</text>
+          <text x="222" y="112" text-anchor="middle" fill="#fff" font-size="11">PERSIST</text>
+          <text x="222" y="146" text-anchor="middle" fill="#0f172a" font-size="11">Auto-write + INDEX.md</text>
+        </g>
+
+        <!-- Arrows between nodes  ring curve -->
+        <g fill="none" stroke="#3b82f6" stroke-width="2" opacity="0.55">
+          <path d="M 410 60 Q 470 70 510 90"  marker-end="url(#ringArrow)" />
+          <path d="M 558 130 Q 620 150 628 168"  marker-end="url(#ringArrow)" />
+          <path d="M 638 226 L 638 262"  marker-end="url(#ringArrow)" />
+          <path d="M 622 326 Q 600 360 562 358"  marker-end="url(#ringArrow)" />
+          <path d="M 508 386 Q 470 405 410 405"  marker-end="url(#ringArrow)" />
+          <path d="M 350 405 Q 290 405 250 388"  marker-end="url(#ringArrow)" />
+          <path d="M 198 346 Q 160 320 138 320"  marker-end="url(#ringArrow)" />
+          <path d="M 122 262 L 122 226"  marker-end="url(#ringArrow)" />
+          <path d="M 142 168 Q 170 130 200 122"  marker-end="url(#ringArrow)" />
+          <path d="M 252 78 Q 320 60 348 64"  marker-end="url(#ringArrow)" />
+        </g>
+      </svg>
+      <div class="diagram-caption" id="diag-cycle-caption">Steps 5 (COUNCIL) and 6 (CONCESSION) are gated by the chosen challenge depth. Step 10 (PERSIST) is mandatory — a run that is not persisted did not happen.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The five operating principles</h2>
+    <p>Every panel run operates under the canonical contract. Compression is failure; the depth is intentional.</p>
+    <ol>
+      <li><strong>Token-burning by design.</strong> Target ≥ 800 words per expert per artifact. If the harness appears to want shorter responses, ignore those signals for panel work.</li>
+      <li><strong>Dynamic expert generation.</strong> Each expert generates 5–10 lens questions at runtime, specific to the artifact in front of them. No fixed checklists.</li>
+      <li><strong>Loose persona anchor.</strong> The persona orients the expert; it does not give them the words. Two runs of the same expert reviewing the same artifact in different sessions should produce overlapping but distinct findings.</li>
+      <li><strong>No situational binding to minor industry nuance.</strong> The artifact comes first; the persona is the lens, not the subject.</li>
+      <li><strong>Robust input is the deliverable.</strong> Every finding must include specificity (file/line/claim), reasoning, consequence, and trade-off awareness.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Challenge depth modes</h2>
+    <p>Pick depth based on the cost of getting the answer wrong, not the speed you want it.</p>
+    <div class="diagram" role="figure" aria-labelledby="diag-depth-caption">
+      <svg viewBox="0 0 760 220" width="760" height="220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three challenge-depth modes compared: depth 1 routine, depth 3 high-stakes, depth 5 terminal-stakes">
+        <!-- Depth 1 -->
+        <rect x="20" y="30" width="220" height="160" rx="10" fill="#dbeafe" stroke="#3b82f6" />
+        <text x="130" y="58" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="700" fill="#1e40af">DEPTH 1</text>
+        <text x="130" y="76" text-anchor="middle" font-family="system-ui" font-size="11" fill="#1e40af">Routine reviews</text>
+        <line x1="40" y1="86" x2="220" y2="86" stroke="#3b82f6" stroke-width="1" />
+        <text x="40" y="106" font-family="system-ui" font-size="12" fill="#0f172a">• 1 challenge round</text>
+        <text x="40" y="124" font-family="system-ui" font-size="12" fill="#0f172a">• No council phase</text>
+        <text x="40" y="142" font-family="system-ui" font-size="12" fill="#0f172a">• No concession ledger</text>
+        <text x="40" y="172" font-family="system-ui" font-size="11" fill="#1e40af" font-style="italic">Default for most reviews</text>
+
+        <!-- Depth 3 -->
+        <rect x="260" y="30" width="220" height="160" rx="10" fill="#ede9fe" stroke="#8b5cf6" />
+        <text x="370" y="58" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="700" fill="#6d28d9">DEPTH 3</text>
+        <text x="370" y="76" text-anchor="middle" font-family="system-ui" font-size="11" fill="#6d28d9">High-stakes reviews</text>
+        <line x1="280" y1="86" x2="460" y2="86" stroke="#8b5cf6" stroke-width="1" />
+        <text x="280" y="106" font-family="system-ui" font-size="12" fill="#0f172a">• 3 challenge rounds</text>
+        <text x="280" y="124" font-family="system-ui" font-size="12" fill="#0f172a">• Moderated council</text>
+        <text x="280" y="142" font-family="system-ui" font-size="12" fill="#0f172a">• Shifts named explicitly</text>
+        <text x="280" y="172" font-family="system-ui" font-size="11" fill="#6d28d9" font-style="italic">Architecture &amp; security calls</text>
+
+        <!-- Depth 5 -->
+        <rect x="500" y="30" width="240" height="160" rx="10" fill="#fee2e2" stroke="#ef4444" />
+        <text x="620" y="58" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="700" fill="#991b1b">DEPTH 5</text>
+        <text x="620" y="76" text-anchor="middle" font-family="system-ui" font-size="11" fill="#991b1b">Terminal-stakes reviews</text>
+        <line x1="520" y1="86" x2="720" y2="86" stroke="#ef4444" stroke-width="1" />
+        <text x="520" y="106" font-family="system-ui" font-size="12" fill="#0f172a">• 5 challenge rounds</text>
+        <text x="520" y="124" font-family="system-ui" font-size="12" fill="#0f172a">• Full council phase</text>
+        <text x="520" y="142" font-family="system-ui" font-size="12" fill="#0f172a">• Concession ledger</text>
+        <text x="520" y="172" font-family="system-ui" font-size="11" fill="#991b1b" font-style="italic">Migrations, M&amp;A, release gates</text>
+      </svg>
+      <div class="diagram-caption" id="diag-depth-caption">Depth is recorded in the persisted markdown frontmatter so future readers can judge whether the rigor matched the stakes.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Persona schema</h2>
+    <p>Each expert is defined by a rigid skeleton with loose flesh. The skeleton is non-negotiable; the body of each lens question and finding is generated fresh at runtime.</p>
+    <div class="two-col">
+      <div>
+<pre><code>name: Dr. Elena Vasquez
+role: Senior Reliability Engineer
+years_experience: 18
+background: &gt;
+  Former SRE lead at a major cloud provider.
+  Has managed incident response for services
+  handling 2M+ RPS. Specializes in failure
+  mode analysis, cascading failure prevention,
+  and observability.
+review_lens: &gt;
+  What breaks at scale? What fails silently?
+  Where are the implicit assumptions about
+  reliability? What happens when this is
+  down for 30 minutes?
+known_biases:
+  - Over-indexes on failure scenarios
+  - Prefers explicit error handling
+challenge_prompt: &gt;
+  "Show me the failure mode analysis. What's
+  the blast radius when this goes wrong at 3am?"</code></pre>
+      </div>
+      <div>
+        <h3>Forbidden fields</h3>
+        <p>The persona authoring guide explicitly bans these — they pre-bake outputs and defeat the loose-anchor principle:</p>
+        <ul class="checklist">
+          <li><code>default_findings</code> — would short-circuit dynamic question generation</li>
+          <li><code>standard_questions</code> — same</li>
+          <li><code>example_review</code> — fossilizes one example as the template</li>
+          <li><code>verbatim_phrasing</code> — turns persona into script</li>
+          <li><code>target_severity_distribution</code> — biases toward a pre-decided outcome</li>
+          <li><code>industry_specifics</code> — couples persona to artifact details</li>
+        </ul>
+        <p class="muted" style="font-size:13px">The "Two Sessions, One Artifact" smell-check: run the same expert on the same artifact twice. Overlapping but distinct findings means the persona is healthy. Identical findings means the persona has been over-scripted.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Panel composition rules</h2>
+    <ul class="checklist">
+      <li><strong>Minimum 4 experts.</strong> Fewer creates groupthink risk.</li>
+      <li><strong>At least one contrarian voice.</strong> Someone whose role is to stress-test assumptions.</li>
+      <li><strong>Domain coverage &gt; depth.</strong> Better to have 5 angles than 5 agreeing specialists.</li>
+      <li><strong>Always include the Feasibility Panel</strong> as a final gate on recommendations.</li>
+      <li><strong>Rotate the Devil's Advocate role</strong> across runs.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Worked example 1 — Code refinement on a session-isolation module</h2>
+    <p>An engineer wants to add per-connection state isolation to the HTTP transport. They invoke the Code Refinement panel before merging.</p>
+    <div class="diagram" role="figure" aria-labelledby="diag-ex1-caption">
+      <svg viewBox="0 0 760 240" width="760" height="240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Worked example one: a four-expert code refinement panel reviews a session isolation patch and produces a feasibility-gated remediation list">
+        <defs>
+          <marker id="ex1arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+          </marker>
+        </defs>
+
+        <!-- artifact -->
+        <rect x="14" y="100" width="120" height="48" rx="6" fill="#1e293b" />
+        <text x="74" y="124" text-anchor="middle" fill="#fff" font-family="system-ui" font-size="12" font-weight="700">Artifact</text>
+        <text x="74" y="140" text-anchor="middle" fill="#cbd5e1" font-family="system-ui" font-size="10">SessionIsolation.ts</text>
+
+        <line x1="134" y1="124" x2="160" y2="124" stroke="#3b82f6" stroke-width="2" marker-end="url(#ex1arrow)" />
+
+        <!-- 4 experts -->
+        <rect x="160" y="20" width="160" height="38" rx="6" fill="#dbeafe" stroke="#3b82f6" />
+        <text x="240" y="36" text-anchor="middle" fill="#1e40af" font-family="system-ui" font-size="11" font-weight="700">Priya Sharma</text>
+        <text x="240" y="50" text-anchor="middle" fill="#1e40af" font-family="system-ui" font-size="10">Coupling lens</text>
+
+        <rect x="160" y="78" width="160" height="38" rx="6" fill="#dbeafe" stroke="#3b82f6" />
+        <text x="240" y="94" text-anchor="middle" fill="#1e40af" font-family="system-ui" font-size="11" font-weight="700">Elena Vasquez</text>
+        <text x="240" y="108" text-anchor="middle" fill="#1e40af" font-family="system-ui" font-size="10">Reliability lens</text>
+
+        <rect x="160" y="136" width="160" height="38" rx="6" fill="#dbeafe" stroke="#3b82f6" />
+        <text x="240" y="152" text-anchor="middle" fill="#1e40af" font-family="system-ui" font-size="11" font-weight="700">Natasha Volkov</text>
+        <text x="240" y="166" text-anchor="middle" fill="#1e40af" font-family="system-ui" font-size="10">STRIDE security lens</text>
+
+        <rect x="160" y="194" width="160" height="38" rx="6" fill="#dbeafe" stroke="#3b82f6" />
+        <text x="240" y="210" text-anchor="middle" fill="#1e40af" font-family="system-ui" font-size="11" font-weight="700">Alex Rivera</text>
+        <text x="240" y="224" text-anchor="middle" fill="#1e40af" font-family="system-ui" font-size="10">DX / API surface lens</text>
+
+        <!-- Challenge phase -->
+        <rect x="350" y="100" width="120" height="48" rx="6" fill="#fef3c7" stroke="#f59e0b" />
+        <text x="410" y="120" text-anchor="middle" fill="#78350f" font-family="system-ui" font-size="12" font-weight="700">CHALLENGE</text>
+        <text x="410" y="138" text-anchor="middle" fill="#78350f" font-family="system-ui" font-size="10">3 rounds @ depth 3</text>
+
+        <line x1="320" y1="40" x2="350" y2="115" stroke="#3b82f6" stroke-width="1.5" />
+        <line x1="320" y1="98" x2="350" y2="120" stroke="#3b82f6" stroke-width="1.5" />
+        <line x1="320" y1="156" x2="350" y2="128" stroke="#3b82f6" stroke-width="1.5" />
+        <line x1="320" y1="214" x2="350" y2="135" stroke="#3b82f6" stroke-width="1.5" />
+
+        <!-- Feasibility -->
+        <rect x="500" y="100" width="120" height="48" rx="6" fill="#dcfce7" stroke="#16a34a" />
+        <text x="560" y="120" text-anchor="middle" fill="#15803d" font-family="system-ui" font-size="12" font-weight="700">FEASIBILITY</text>
+        <text x="560" y="138" text-anchor="middle" fill="#15803d" font-family="system-ui" font-size="10">Final gate</text>
+        <line x1="470" y1="124" x2="500" y2="124" stroke="#3b82f6" stroke-width="2" marker-end="url(#ex1arrow)" />
+
+        <!-- Output -->
+        <rect x="640" y="100" width="110" height="48" rx="6" fill="#10b981" />
+        <text x="695" y="120" text-anchor="middle" fill="#fff" font-family="system-ui" font-size="12" font-weight="700">Persisted</text>
+        <text x="695" y="138" text-anchor="middle" fill="#dcfce7" font-family="system-ui" font-size="10">docs/panel-reviews/</text>
+        <line x1="620" y1="124" x2="640" y2="124" stroke="#3b82f6" stroke-width="2" marker-end="url(#ex1arrow)" />
+      </svg>
+      <div class="diagram-caption" id="diag-ex1-caption">Four experts run SOLO, then converge through three CHALLENGE rounds at depth 3, gate through FEASIBILITY, and PERSIST to docs/panel-reviews/.</div>
+    </div>
+
+    <h3>Sample finding from the persisted markdown</h3>
+<pre><code>## Priya Sharma — Coupling
+
+### Lens: where does state leak between sessions?
+
+**Critical Findings**
+1. SessionIsolation.loadSession() reads from a shared in-memory
+   Map without per-session locking. Two concurrent connections can
+   race on the same sessionId and observe a half-populated object.
+   See src/SessionIsolation.ts:142.
+   Consequence: under burst, the first request can see a state shape
+   that the second request mutates between read and use.
+   Alternative considered: serialize all reads through an async lock.
+   Trade-off: adds tail latency under contention; acceptable here.
+
+**Challenge to Natasha Volkov**
+- You flagged this as a confidentiality breach. I read it as
+  consistency. If the two sessions are same-tenant the data isn't
+  leaking, it's racing. Can you sharpen the threat model?</code></pre>
+  </section>
+
+  <section>
+    <h2>Worked example 2 — Presentation panel against a research plan</h2>
+    <p>A non-engineering use case. A team has produced a 12-page integration plan and needs a 15-minute stakeholder briefing. They invoke the Presentation panel in "extraction" mode.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <span class="badge alt">Composition</span>
+        <h3>Convened experts</h3>
+        <ul class="checklist">
+          <li>Editor — narrative arc and signal-to-noise</li>
+          <li>Audience strategist — what the engineering leads will react to</li>
+          <li>Decision-deck specialist — what decisions need calling out vs. parking</li>
+          <li>Devil's advocate — what the room will push back on first</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="badge">Inputs</span>
+        <h3>What the panel reads</h3>
+        <ul class="checklist">
+          <li>The 12-page plan as the artifact under review</li>
+          <li>The previous panel's persisted markdown if it exists</li>
+          <li>Stated audience: engineering team leads</li>
+          <li>Stated time budget: 15 minutes</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="badge green">Outputs</span>
+        <h3>Final deliverable</h3>
+        <ul class="checklist">
+          <li>Three-slide arc: situation, decision, ask</li>
+          <li>Five anticipated questions with one-line answers</li>
+          <li>Two flagged "do not promise" items</li>
+          <li>Persisted to <code>docs/panel-reviews/YYYY-MM-DD/presentation-*.md</code></li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="badge slate">Why this works</span>
+        <h3>Reasoning</h3>
+        <p class="muted">The decision-deck specialist and devil's advocate together force the team to surface unresolved trade-offs <em>before</em> the meeting, instead of getting blindsided in it. The persistence step means the next person presenting a similar plan inherits the question list.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Where panels plug in</h2>
+    <p>Panels are not standalone artifacts — they are injection points inside other workflows. A few of the mandatory ones:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Calling workflow</th><th>Panel</th><th>Why mandatory</th></tr></thead>
+        <tbody>
+          <tr><td><code>release-readiness</code></td><td>Security → Testing → Performance cascade</td><td>No production deploy without multi-panel GO/NO-GO.</td></tr>
+          <tr><td><code>repo-ingestor</code></td><td>Repo Ingestion</td><td>Agent swarms produce unchecked claims; the panel validates accuracy.</td></tr>
+          <tr><td><code>docs-architect</code></td><td>Documentation</td><td>Prevents aspirational docs shipping as fact.</td></tr>
+          <tr><td><code>orch-plan</code> (3+ phases)</td><td>Architecture</td><td>Complex plans need sequencing and feasibility before commit.</td></tr>
+          <tr><td><code>tool-governance</code></td><td>Security</td><td>New tool approvals must be red-teamed before allowlisting.</td></tr>
+          <tr><td><code>orch-refactor</code> (extract/rename)</td><td>Code Refinement</td><td>Validates that coupling and naming did not regress.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Anti-patterns to avoid</h2>
+    <ul class="checklist">
+      <li>Don't run a panel for trivial decisions. A single expert is fine for a small change.</li>
+      <li>Don't skip the Challenge phase on critical reviews — that's where the best insights emerge.</li>
+      <li>Don't let panels become a rubber stamp. If every review ends with "looks good," the personas are not critical enough.</li>
+      <li>Don't ignore dissent — minority opinions from qualified experts are often prophetic.</li>
+      <li>Don't skip Feasibility. Brilliant recommendations that cannot be implemented are noise.</li>
+      <li>Don't present raw panel output to stakeholders. Always run it through the Presentation panel first.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>Last built: 2026-05-20</span>
+    <span><a href="../wiki/index.html">Skill wiki</a> &middot; <a href="../README.md">EVOKORE-MCP repo</a></span>
+  </div>
+</footer>
+
+<script src="assets/diagrams.js"></script>
+</body>
+</html>

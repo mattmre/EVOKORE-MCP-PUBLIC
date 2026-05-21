@@ -1,0 +1,105 @@
+{
+    "statusLine":  {
+                       "type":  "command",
+                       "command":  "node scripts/status.js"
+                   },
+    "hooks":  {
+                  "SessionStart":  [
+                                       {
+                                           "hooks":  [
+                                                         {
+                                                             "type":  "command",
+                                                             "command":  "$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh",
+                                                             "timeout":  300000
+                                                         }
+                                                     ]
+                                       }
+                                   ],
+                  "PreToolUse":  [
+                                     {
+                                         "matcher":  "Bash|Edit|Write|Read",
+                                         "hooks":  [
+                                                       {
+                                                           "type":  "command",
+                                                           "command":  "node scripts/hooks/damage-control.js",
+                                                           "timeout":  10000
+                                                       }
+                                                   ]
+                                     }
+                                 ],
+                  "UserPromptSubmit":  [
+                                           {
+                                               "matcher":  "",
+                                               "hooks":  [
+                                                             {
+                                                                 "type":  "command",
+                                                                 "command":  "node scripts/hooks/purpose-gate.js",
+                                                                 "timeout":  5000
+                                                             },
+                                                             {
+                                                                 "type":  "command",
+                                                                 "command":  "node scripts/hooks/repo-audit-hook.js",
+                                                                 "timeout":  15000
+                                                             }
+                                                         ]
+                                           }
+                                       ],
+                  "PostToolUse":  [
+                                      {
+                                          "matcher":  "",
+                                          "hooks":  [
+                                                        {
+                                                            "type":  "command",
+                                                            "command":  "node scripts/hooks/session-replay.js",
+                                                            "timeout":  5000
+                                                        },
+                                                        {
+                                                            "type":  "command",
+                                                            "command":  "node scripts/hooks/evidence-capture.js",
+                                                            "timeout":  5000
+                                                        },
+                                                        {
+                                                            "type":  "command",
+                                                            "command":  "node scripts/hooks/after-edit.js",
+                                                            "timeout":  5000
+                                                        },
+                                                        {
+                                                            "type":  "command",
+                                                            "command":  "node scripts/hooks/subagent-tracker.js",
+                                                            "timeout":  5000
+                                                        }
+                                                    ]
+                                      }
+                                  ],
+                  "PreCompact":  [
+                                     {
+                                         "matcher":  "",
+                                         "hooks":  [
+                                                       {
+                                                           "type":  "command",
+                                                           "command":  "node scripts/hooks/pre-compact.js",
+                                                           "timeout":  10000
+                                                       }
+                                                   ]
+                                     }
+                                 ],
+                  "Stop":  [
+                               {
+                                   "matcher":  "",
+                                   "hooks":  [
+                                                 {
+                                                     "type":  "command",
+                                                     "command":  "node scripts/hooks/tilldone.js",
+                                                     "timeout":  5000
+                                                 },
+                                                 {
+                                                     "type":  "command",
+                                                     "command":  "node scripts/hooks/voice-stop.js",
+                                                     "timeout":  10000
+                                                 }
+                                             ]
+                               }
+                           ]
+              },
+    "dangerouslySkipPermissions":  true
+}

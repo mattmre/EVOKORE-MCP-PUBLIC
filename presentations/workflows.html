@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EVOKORE-MCP — Workflows</title>
+<meta name="description" content="Four representative EVOKORE workflows as flowcharts: two code workflows and two non-code workflows." />
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-dot" aria-hidden="true"></span>EVOKORE-MCP<small>presentations</small></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html" data-nav="index.html">Home</a>
+      <a href="executive-summary.html" data-nav="executive-summary.html">Executive</a>
+      <a href="technical-analysis.html" data-nav="technical-analysis.html">Technical</a>
+      <a href="panel-of-experts.html" data-nav="panel-of-experts.html">Panel</a>
+      <a href="arch-aep-system.html" data-nav="arch-aep-system.html">AEP</a>
+      <a href="skill-spotlights.html" data-nav="skill-spotlights.html">Skills</a>
+      <a href="workflows.html" data-nav="workflows.html">Workflows</a>
+      <a class="repo" href="../README.md">Back to repo</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-intro">
+    <div class="kicker">Workflows</div>
+    <h1>Four representative flows</h1>
+    <p>Skills compose. Two of these flowcharts show how code skills chain through a panel review into a PR. The other two show that the same composition pattern works for non-code work — turning rough ideas into PRDs, or running research reviews end-to-end.</p>
+  </section>
+
+  <nav aria-label="Workflows on this page" style="margin-bottom:24px;">
+    <a class="pill accent" href="#code-refactor">Code — refactor a module</a>
+    <a class="pill accent" href="#code-bug">Code — fix a bug</a>
+    <a class="pill purple" href="#noncode-prd">Non-code — plan a project</a>
+    <a class="pill purple" href="#noncode-research">Non-code — research review</a>
+  </nav>
+
+  <!-- WORKFLOW 1 -->
+  <section id="code-refactor">
+    <h2>1. Code workflow — Refactor a module</h2>
+    <p>An engineer wants to widen a heavily-imported module without breaking callers. The composition: <code>repo-ingestor</code> → <code>panel-of-experts (architecture)</code> → <code>improve-codebase-architecture</code> → <code>pr-manager</code>.</p>
+
+    <div class="diagram" role="figure" aria-labelledby="diag-w1-caption">
+      <svg viewBox="0 0 760 260" width="760" height="260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Refactor workflow as four sequential nodes connected by arrows, with conditional escalation to design-an-interface panel">
+        <defs>
+          <marker id="w1arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+          </marker>
+          <marker id="w1dotted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b5cf6" />
+          </marker>
+        </defs>
+
+        <!-- Step 1 -->
+        <rect x="20" y="100" width="150" height="64" rx="10" fill="#3b82f6" />
+        <text x="95" y="124" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#fff">repo-ingestor</text>
+        <text x="95" y="142" text-anchor="middle" font-family="system-ui" font-size="11" fill="#dbeafe">Shape summary</text>
+        <text x="95" y="156" text-anchor="middle" font-family="system-ui" font-size="11" fill="#dbeafe">of target context</text>
+
+        <line x1="170" y1="132" x2="210" y2="132" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#w1arrow)" />
+
+        <!-- Step 2 -->
+        <rect x="210" y="100" width="170" height="64" rx="10" fill="#0f172a" />
+        <text x="295" y="124" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#fff">panel-of-experts</text>
+        <text x="295" y="142" text-anchor="middle" font-family="system-ui" font-size="11" fill="#cbd5e1">architecture panel</text>
+        <text x="295" y="156" text-anchor="middle" font-family="system-ui" font-size="11" fill="#cbd5e1">depth 3</text>
+
+        <line x1="380" y1="132" x2="420" y2="132" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#w1arrow)" />
+
+        <!-- Step 3 -->
+        <rect x="420" y="100" width="180" height="64" rx="10" fill="#3b82f6" />
+        <text x="510" y="120" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#fff">improve-codebase-</text>
+        <text x="510" y="134" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#fff">architecture</text>
+        <text x="510" y="152" text-anchor="middle" font-family="system-ui" font-size="11" fill="#dbeafe">apply recommendations</text>
+
+        <line x1="600" y1="132" x2="640" y2="132" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#w1arrow)" />
+
+        <!-- Step 4 -->
+        <rect x="640" y="100" width="100" height="64" rx="10" fill="#10b981" />
+        <text x="690" y="124" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#fff">pr-manager</text>
+        <text x="690" y="142" text-anchor="middle" font-family="system-ui" font-size="11" fill="#d1fae5">open PR with</text>
+        <text x="690" y="156" text-anchor="middle" font-family="system-ui" font-size="11" fill="#d1fae5">evidence attached</text>
+
+        <!-- Conditional escalation -->
+        <rect x="380" y="200" width="220" height="44" rx="10" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="5,3" />
+        <text x="490" y="220" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="700" fill="#6d28d9">design-an-interface panel</text>
+        <text x="490" y="236" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6d28d9">(only when 3+ viable interface shapes surface)</text>
+
+        <line x1="510" y1="164" x2="490" y2="200" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#w1dotted)" />
+
+        <!-- labels -->
+        <text x="380" y="30" text-anchor="middle" font-family="system-ui" font-size="11" fill="#64748b">Sequential, evidence-carrying. Each node passes a persisted artifact to the next.</text>
+        <text x="200" y="80" text-anchor="middle" font-family="system-ui" font-size="11" fill="#94a3b8">→ shape summary</text>
+        <text x="400" y="80" text-anchor="middle" font-family="system-ui" font-size="11" fill="#94a3b8">→ panel review markdown</text>
+        <text x="620" y="80" text-anchor="middle" font-family="system-ui" font-size="11" fill="#94a3b8">→ commits + verification log</text>
+      </svg>
+      <div class="diagram-caption" id="diag-w1-caption">Each step writes a persisted artifact before handing off. The dotted box is a conditional panel — invoked only when the architecture review surfaces three or more viable interface shapes.</div>
+    </div>
+
+    <h3>What happens at each step</h3>
+    <ol>
+      <li><strong>repo-ingestor</strong> walks the repo and produces a high-signal shape summary of the target context. The summary names the entry points, the most imported modules, and the obvious coupling hot-spots.</li>
+      <li><strong>panel-of-experts (architecture)</strong> reads the shape summary plus the candidate module. Four experts run SOLO reviews, then three CHALLENGE rounds at depth 3, then converge into a prioritized finding list. The output is a persisted markdown in <code>docs/panel-reviews/</code>.</li>
+      <li><strong>improve-codebase-architecture</strong> reads the panel finding list and the affected ADR. It applies the recommendations as a series of small, named commits. If the panel flagged 3+ viable interface shapes, this step pauses and triggers the <code>design-an-interface</code> panel before continuing.</li>
+      <li><strong>pr-manager</strong> packages the branch into a PR using the project template. The PR body links to the panel review SHA, the ADR, and the verification log. Reviewers inherit the context for free.</li>
+    </ol>
+  </section>
+
+  <!-- WORKFLOW 2 -->
+  <section id="code-bug">
+    <h2>2. Code workflow — Fix a bug</h2>
+    <p>A regression appeared in the rate limiter. The composition: <code>triage-bug</code> → <code>tdd</code> → <code>pr-manager</code>.</p>
+
+    <div class="diagram" role="figure" aria-labelledby="diag-w2-caption">
+      <svg viewBox="0 0 760 280" width="760" height="280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bug fix workflow as three nodes connected by arrows, with TDD shown as an internal Red-Green-Refactor cycle">
+        <defs>
+          <marker id="w2arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+          </marker>
+          <marker id="w2red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444" />
+          </marker>
+        </defs>
+
+        <!-- Step 1 -->
+        <rect x="40" y="50" width="180" height="64" rx="10" fill="#3b82f6" />
+        <text x="130" y="74" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#fff">triage-bug</text>
+        <text x="130" y="92" text-anchor="middle" font-family="system-ui" font-size="11" fill="#dbeafe">read evidence JSONL</text>
+        <text x="130" y="106" text-anchor="middle" font-family="system-ui" font-size="11" fill="#dbeafe">produce docs/bugs/&lt;slug&gt;.md</text>
+
+        <line x1="220" y1="82" x2="270" y2="82" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#w2arrow)" />
+
+        <!-- Step 2 (TDD) -->
+        <rect x="270" y="30" width="270" height="200" rx="12" fill="#0f172a" />
+        <text x="405" y="58" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="700" fill="#fff">tdd</text>
+        <text x="405" y="76" text-anchor="middle" font-family="system-ui" font-size="11" fill="#94a3b8">red → green → refactor</text>
+
+        <!-- Internal TDD loop -->
+        <circle cx="335" cy="140" r="34" fill="#ef4444" />
+        <text x="335" y="138" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="700" fill="#fff">RED</text>
+        <text x="335" y="154" text-anchor="middle" font-family="system-ui" font-size="9" fill="#fee2e2">failing test</text>
+
+        <circle cx="405" cy="140" r="34" fill="#10b981" />
+        <text x="405" y="138" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="700" fill="#fff">GREEN</text>
+        <text x="405" y="154" text-anchor="middle" font-family="system-ui" font-size="9" fill="#d1fae5">smallest fix</text>
+
+        <circle cx="475" cy="140" r="34" fill="#8b5cf6" />
+        <text x="475" y="138" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="700" fill="#fff">REFACTOR</text>
+        <text x="475" y="154" text-anchor="middle" font-family="system-ui" font-size="9" fill="#ede9fe">clean up</text>
+
+        <path d="M 369 140 L 371 140" stroke="#fff" stroke-width="2" />
+        <line x1="369" y1="140" x2="371" y2="140" stroke="#fff" stroke-width="2" marker-end="url(#w2arrow)" />
+        <line x1="439" y1="140" x2="441" y2="140" stroke="#fff" stroke-width="2" marker-end="url(#w2arrow)" />
+
+        <text x="405" y="200" text-anchor="middle" font-family="system-ui" font-size="11" fill="#fbbf24">red-commit SHA recorded in verification log</text>
+
+        <line x1="540" y1="130" x2="580" y2="130" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#w2arrow)" />
+
+        <!-- Step 3 -->
+        <rect x="580" y="98" width="140" height="64" rx="10" fill="#10b981" />
+        <text x="650" y="122" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#fff">pr-manager</text>
+        <text x="650" y="140" text-anchor="middle" font-family="system-ui" font-size="11" fill="#d1fae5">open PR with</text>
+        <text x="650" y="154" text-anchor="middle" font-family="system-ui" font-size="11" fill="#d1fae5">red+green SHAs</text>
+
+        <text x="380" y="262" text-anchor="middle" font-family="system-ui" font-size="11" fill="#64748b">No green commit lands before its red commit is on the record.</text>
+      </svg>
+      <div class="diagram-caption" id="diag-w2-caption">The TDD step is the heart of the flow. The verification log captures the red commit SHA before the green commit is allowed to merge.</div>
+    </div>
+
+    <h3>What happens at each step</h3>
+    <ol>
+      <li><strong>triage-bug</strong> reads the session evidence log (and the repo audit, if available) to determine when the regression first appeared. It produces a markdown report at <code>docs/bugs/&lt;slug&gt;.md</code> with the suspected commit range, the failing scenario, and a proposed test seed.</li>
+      <li><strong>tdd</strong> writes the failing test first. The commit message captures the test failure. Only then is the fix attempted; the next commit names the red SHA explicitly. After green, an optional refactor pass cleans up without changing behavior.</li>
+      <li><strong>pr-manager</strong> opens the PR with both the red and green commit SHAs in the description, plus a link to the <code>docs/bugs/</code> artifact. Reviewers can verify the regression is genuinely covered.</li>
+    </ol>
+  </section>
+
+  <!-- WORKFLOW 3 -->
+  <section id="noncode-prd">
+    <h2>3. Non-code workflow — Plan a project</h2>
+    <p>A team has been iterating informally on a feature direction for a few weeks. They want to lock the scope into a PRD and decompose it into actionable issues. The composition: <code>to-prd</code> → <code>panel-of-experts (planning)</code> → <code>to-issues</code>.</p>
+
+    <div class="diagram" role="figure" aria-labelledby="diag-w3-caption">
+      <svg viewBox="0 0 760 240" width="760" height="240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Project planning workflow as three nodes producing a PRD, panel review, and issue list">
+        <defs>
+          <marker id="w3arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b5cf6" />
+          </marker>
+        </defs>
+
+        <!-- Input -->
+        <rect x="20" y="100" width="120" height="60" rx="8" fill="#1e293b" />
+        <text x="80" y="124" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="700" fill="#fff">Session evidence</text>
+        <text x="80" y="140" text-anchor="middle" font-family="system-ui" font-size="10" fill="#cbd5e1">~/.evokore/sessions/</text>
+        <text x="80" y="154" text-anchor="middle" font-family="system-ui" font-size="10" fill="#cbd5e1">*-evidence.jsonl</text>
+
+        <line x1="140" y1="130" x2="170" y2="130" stroke="#8b5cf6" stroke-width="2.5" marker-end="url(#w3arrow)" />
+
+        <!-- Step 1 -->
+        <rect x="170" y="100" width="140" height="60" rx="10" fill="#8b5cf6" />
+        <text x="240" y="124" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#fff">to-prd</text>
+        <text x="240" y="142" text-anchor="middle" font-family="system-ui" font-size="11" fill="#ede9fe">draft + auto</text>
+        <text x="240" y="156" text-anchor="middle" font-family="system-ui" font-size="11" fill="#ede9fe">panel-review</text>
+
+        <line x1="310" y1="130" x2="340" y2="130" stroke="#8b5cf6" stroke-width="2.5" marker-end="url(#w3arrow)" />
+
+        <!-- Step 2 -->
+        <rect x="340" y="100" width="160" height="60" rx="10" fill="#0f172a" />
+        <text x="420" y="124" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#fff">panel-of-experts</text>
+        <text x="420" y="142" text-anchor="middle" font-family="system-ui" font-size="11" fill="#cbd5e1">Product Requirements panel</text>
+        <text x="420" y="156" text-anchor="middle" font-family="system-ui" font-size="11" fill="#cbd5e1">depth 3</text>
+
+        <line x1="500" y1="130" x2="530" y2="130" stroke="#8b5cf6" stroke-width="2.5" marker-end="url(#w3arrow)" />
+
+        <!-- Step 3 -->
+        <rect x="530" y="100" width="140" height="60" rx="10" fill="#10b981" />
+        <text x="600" y="124" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#fff">to-issues</text>
+        <text x="600" y="142" text-anchor="middle" font-family="system-ui" font-size="11" fill="#d1fae5">vertical slices</text>
+        <text x="600" y="156" text-anchor="middle" font-family="system-ui" font-size="11" fill="#d1fae5">AFK / HITL tags</text>
+
+        <!-- Outputs -->
+        <text x="240" y="194" text-anchor="middle" font-family="system-ui" font-size="11" fill="#475569">docs/prd/&lt;slug&gt;.md</text>
+        <text x="420" y="194" text-anchor="middle" font-family="system-ui" font-size="11" fill="#475569">docs/panel-reviews/&lt;date&gt;/</text>
+        <text x="600" y="194" text-anchor="middle" font-family="system-ui" font-size="11" fill="#475569">GitHub issues + acceptance criteria</text>
+
+        <line x1="240" y1="162" x2="240" y2="182" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="420" y1="162" x2="420" y2="182" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="600" y1="162" x2="600" y2="182" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3" />
+
+        <text x="380" y="40" text-anchor="middle" font-family="system-ui" font-size="11" fill="#64748b">A non-code workflow that uses the same evidence + panel + decomposition pattern as the code flows.</text>
+      </svg>
+      <div class="diagram-caption" id="diag-w3-caption">Each step writes a persisted artifact. The team can pause between steps without losing context — the PRD, the panel review, and the issue list are all on disk.</div>
+    </div>
+
+    <h3>What happens at each step</h3>
+    <ol>
+      <li><strong>to-prd</strong> reads the recent session evidence — every recorded experiment, decision, and finding from the iteration weeks. It drafts a PRD with sections for problem, audience, scope, non-goals, success metrics, and risks. The skill auto-panels the draft before declaring it done; an unreviewed PRD never reaches "ready" state.</li>
+      <li><strong>panel-of-experts (Product Requirements panel)</strong> reads the PRD draft. Four experts run SOLO, with the product, engineering, growth, and devil's-advocate lenses. The persisted markdown lists the questions stakeholders are likely to ask and the gaps the PRD has not yet answered.</li>
+      <li><strong>to-issues</strong> reads the reviewed PRD and decomposes it into vertical-slice issues. Each issue carries acceptance criteria, an estimated effort tag, and an AFK / HITL flag (AFK = an agent fleet can take this without supervision; HITL = needs a human in the loop). The output is a set of GitHub issues, or a draftable issue list if the user prefers to review before filing.</li>
+    </ol>
+  </section>
+
+  <!-- WORKFLOW 4 -->
+  <section id="noncode-research">
+    <h2>4. Non-code workflow — Run a research review</h2>
+    <p>A research lead has produced a 12-page market analysis. The team wants a structured review and a stakeholder briefing. The composition: <code>content-research-writer</code> → <code>panel-of-experts (research)</code> → <code>meeting-insights-analyzer</code>.</p>
+
+    <div class="diagram" role="figure" aria-labelledby="diag-w4-caption">
+      <svg viewBox="0 0 760 260" width="760" height="260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Research review workflow as three nodes producing a long-form analysis, panel review, and extracted decisions and follow-ups">
+        <defs>
+          <marker id="w4arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b5cf6" />
+          </marker>
+        </defs>
+
+        <!-- Step 1 -->
+        <rect x="20" y="60" width="170" height="80" rx="10" fill="#8b5cf6" />
+        <text x="105" y="92" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#fff">content-research-</text>
+        <text x="105" y="108" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#fff">writer</text>
+        <text x="105" y="126" text-anchor="middle" font-family="system-ui" font-size="11" fill="#ede9fe">long-form analysis</text>
+
+        <line x1="190" y1="100" x2="230" y2="100" stroke="#8b5cf6" stroke-width="2.5" marker-end="url(#w4arrow)" />
+
+        <!-- Step 2 -->
+        <rect x="230" y="60" width="180" height="80" rx="10" fill="#0f172a" />
+        <text x="320" y="92" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#fff">panel-of-experts</text>
+        <text x="320" y="110" text-anchor="middle" font-family="system-ui" font-size="11" fill="#cbd5e1">research panel</text>
+        <text x="320" y="124" text-anchor="middle" font-family="system-ui" font-size="11" fill="#cbd5e1">depth 5 if M&amp;A-grade</text>
+
+        <line x1="410" y1="100" x2="450" y2="100" stroke="#8b5cf6" stroke-width="2.5" marker-end="url(#w4arrow)" />
+
+        <!-- Step 3 -->
+        <rect x="450" y="60" width="200" height="80" rx="10" fill="#3b82f6" />
+        <text x="550" y="86" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#fff">meeting-insights-</text>
+        <text x="550" y="102" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#fff">analyzer</text>
+        <text x="550" y="120" text-anchor="middle" font-family="system-ui" font-size="11" fill="#dbeafe">decisions + owners +</text>
+        <text x="550" y="134" text-anchor="middle" font-family="system-ui" font-size="11" fill="#dbeafe">unresolved questions</text>
+
+        <line x1="650" y1="100" x2="690" y2="100" stroke="#8b5cf6" stroke-width="2.5" marker-end="url(#w4arrow)" />
+
+        <!-- Output -->
+        <rect x="690" y="68" width="60" height="64" rx="6" fill="#10b981" />
+        <text x="720" y="92" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="700" fill="#fff">brief</text>
+        <text x="720" y="108" text-anchor="middle" font-family="system-ui" font-size="9" fill="#d1fae5">15 min</text>
+        <text x="720" y="120" text-anchor="middle" font-family="system-ui" font-size="9" fill="#d1fae5">stakeholder</text>
+
+        <!-- Artifacts row -->
+        <text x="105" y="170" text-anchor="middle" font-family="system-ui" font-size="11" fill="#475569">docs/research/&lt;slug&gt;.md</text>
+        <text x="320" y="170" text-anchor="middle" font-family="system-ui" font-size="11" fill="#475569">docs/panel-reviews/&lt;date&gt;/</text>
+        <text x="550" y="170" text-anchor="middle" font-family="system-ui" font-size="11" fill="#475569">docs/briefings/&lt;slug&gt;.md</text>
+
+        <line x1="105" y1="142" x2="105" y2="160" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="320" y1="142" x2="320" y2="160" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="550" y1="142" x2="550" y2="160" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3" />
+
+        <text x="380" y="220" text-anchor="middle" font-family="system-ui" font-size="11" fill="#64748b">Optional fourth step: run the Presentation panel against the briefing before stakeholder delivery.</text>
+      </svg>
+      <div class="diagram-caption" id="diag-w4-caption">A research review uses the same three-node skeleton as the code workflows — produce, review, extract — with a panel review as the quality gate.</div>
+    </div>
+
+    <h3>What happens at each step</h3>
+    <ol>
+      <li><strong>content-research-writer</strong> takes the raw research material and produces a long-form analysis. The skill separates research, synthesis, and writing into distinct phases so the synthesis is auditable independently of the prose. Output: a markdown report under <code>docs/research/</code>.</li>
+      <li><strong>panel-of-experts (research panel)</strong> reads the analysis. Four experts run SOLO: a methodology specialist, a domain specialist, a strategy specialist, and the devil's advocate. For an M&amp;A-grade review, run at depth 5 so the concession ledger captures every shifted position.</li>
+      <li><strong>meeting-insights-analyzer</strong> reads the persisted panel review markdown and extracts the structured outputs that stakeholders actually need: the decisions made, the owners assigned, the deadlines, and the questions that remain unresolved. Output: a briefing file under <code>docs/briefings/</code>.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>What all four flows have in common</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Evidence-driven, not aspirational</h3>
+        <p class="muted">Every flow starts by reading something on disk — repo files, session evidence, raw research. Nothing is invented from prompt context alone.</p>
+      </div>
+      <div class="card">
+        <h3>Persisted artifacts between steps</h3>
+        <p class="muted">Each node writes a file before the next node reads it. The team can pause, audit, or hand off at any boundary without losing context.</p>
+      </div>
+      <div class="card">
+        <h3>Panel review as the quality gate</h3>
+        <p class="muted">Three of the four flows include a panel review in the middle. The fourth (bug fix) substitutes TDD for the same role — a structured rigor that catches what a single perspective misses.</p>
+      </div>
+      <div class="card">
+        <h3>The shape generalizes</h3>
+        <p class="muted">Produce → Review → Decompose, with a persisted artifact at each boundary. Use the same skeleton for any new workflow you want to add.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>Last built: 2026-05-20</span>
+    <span><a href="../wiki/index.html">Skill wiki</a> &middot; <a href="../README.md">EVOKORE-MCP repo</a></span>
+  </div>
+</footer>
+
+<script src="assets/diagrams.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+#!/usr/bin/env node
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const { writeHookEvent, sanitizeId } = require('./hook-observability');
+const { pruneOldSessions } = require('./log-rotation');
+const { SESSIONS_DIR } = require('./session-continuity');
+
+// Phase 0-C: dual-write to append-only JSONL manifest. Require is wrapped so
+// a missing dist build fails open to legacy writeSessionState.
+let appendEvent = () => {};
+try {
+  // eslint-disable-next-line global-require
+  ({ appendEvent } = require('../dist/SessionManifest.js'));
+} catch {
+  // Fail open.
+}
+
+function summarize(toolName, toolInput) {
+  if (!toolInput) return '';
+  switch (toolName) {
+    case 'Bash':
+      return (toolInput.command || '').slice(0, 200);
+    case 'Edit':
+    case 'Write':
+    case 'Read':
+      return toolInput.file_path || '';
+    case 'Grep':
+      return `pattern:${toolInput.pattern || ''} ${toolInput.path || ''}`.trim();
+    case 'Glob':
+      return `${toolInput.pattern || ''} ${toolInput.path || ''}`.trim();
+    case 'Task':
+      return (toolInput.description || '').slice(0, 100);
+    case 'WebFetch':
+      return toolInput.url || '';
+    case 'WebSearch':
+      return toolInput.query || '';
+    default:
+      return JSON.stringify(toolInput).slice(0, 150);
+  }
+}
+
+let input = '';
+process.stdin.on('data', (chunk) => input += chunk);
+process.stdin.on('end', () => {
+  try {
+    try { pruneOldSessions(SESSIONS_DIR); } catch { /* best effort */ }
+
+    const payload = JSON.parse(input);
+    const sessionId = sanitizeId(payload.session_id);
+    const toolName = payload.tool_name || 'unknown';
+    const toolInput = payload.tool_input || {};
+
+    const entry = {
+      ts: new Date().toISOString(),
+      tool: toolName,
+      summary: summarize(toolName, toolInput),
+      outcome: payload.tool_response?.is_error ? 'error' : 'ok',
+      output: (payload.tool_response?.content?.[0]?.text || '').slice(0, 300),
+      invocation_ts: new Date().toISOString()
+    };
+
+    if (!fs.existsSync(SESSIONS_DIR)) {
+      fs.mkdirSync(SESSIONS_DIR, { recursive: true });
+    }
+
+    const logPath = path.join(SESSIONS_DIR, `${sessionId}-replay.jsonl`);
+    fs.appendFileSync(logPath, JSON.stringify(entry) + '\n');
+    appendEvent(sessionId, {
+      type: 'tool_invoked',
+      payload: {
+        tool: toolName,
+        summary: entry.summary,
+        outcome: entry.outcome,
+        output: entry.output
+      }
+    });
+    writeHookEvent({
+      hook: 'session-replay',
+      event: 'replay_entry_written',
+      session_id: sessionId,
+      tool: toolName
+    });
+  } catch (error) {
+    // Never fail — always exit 0
+    writeHookEvent({
+      hook: 'session-replay',
+      event: 'fail_safe_error',
+      error: String(error && error.message ? error.message : error)
+    });
+  }
+  process.exit(0);
+});

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EVOKORE-MCP — ARCH-AEP System</title>
+<meta name="description" content="The Align / Execute / Prove cycle: phase planning, test matrix, verification log, and the auditable engineering discipline behind EVOKORE workflows." />
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-dot" aria-hidden="true"></span>EVOKORE-MCP<small>presentations</small></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html" data-nav="index.html">Home</a>
+      <a href="executive-summary.html" data-nav="executive-summary.html">Executive</a>
+      <a href="technical-analysis.html" data-nav="technical-analysis.html">Technical</a>
+      <a href="panel-of-experts.html" data-nav="panel-of-experts.html">Panel</a>
+      <a href="arch-aep-system.html" data-nav="arch-aep-system.html">AEP</a>
+      <a href="skill-spotlights.html" data-nav="skill-spotlights.html">Skills</a>
+      <a href="workflows.html" data-nav="workflows.html">Workflows</a>
+      <a class="repo" href="../README.md">Back to repo</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-intro">
+    <div class="kicker">Top-tier feature spotlight</div>
+    <h1>ARCH-AEP — Align, Execute, Prove</h1>
+    <p>AEP is a structured engineering methodology for agentic workflows. It organizes work into three repeating phases — <strong>Align</strong> (scope lock), <strong>Execute</strong> (severity-tiered remediation), and <strong>Prove</strong> (auditable verification evidence) — and refuses to advance a tier until the previous one closes with proof.</p>
+  </section>
+
+  <section>
+    <h2>The triangle</h2>
+    <p>Three phases. Each one feeds the next. The loop closes when evidence proves the work, not when the work looks done.</p>
+
+    <div class="diagram" role="figure" aria-labelledby="diag-tri-caption">
+      <svg viewBox="0 0 760 460" width="760" height="460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The AEP triangle showing Align at the top, Execute at the bottom-left, and Prove at the bottom-right with arrows flowing clockwise">
+        <defs>
+          <marker id="aepArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+          </marker>
+        </defs>
+
+        <!-- Triangle outline -->
+        <polygon points="380,30 670,420 90,420" fill="#0f172a" opacity="0.04" stroke="#cbd5e1" stroke-width="1" />
+
+        <!-- Align (top) -->
+        <circle cx="380" cy="70" r="56" fill="#3b82f6" />
+        <text x="380" y="60" text-anchor="middle" fill="#fff" font-family="system-ui" font-size="20" font-weight="700">ALIGN</text>
+        <text x="380" y="82" text-anchor="middle" fill="#dbeafe" font-family="system-ui" font-size="11">Scope lock</text>
+        <text x="380" y="98" text-anchor="middle" fill="#dbeafe" font-family="system-ui" font-size="11">Phase 1 W3</text>
+
+        <text x="380" y="148" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="600" fill="#0f172a">Freeze the inputs</text>
+        <text x="380" y="166" text-anchor="middle" font-family="system-ui" font-size="11" fill="#475569">Lock the PR range, freeze the refinement report,</text>
+        <text x="380" y="180" text-anchor="middle" font-family="system-ui" font-size="11" fill="#475569">normalize findings with unique IDs, accept criteria</text>
+
+        <!-- Execute (bottom-left) -->
+        <circle cx="150" cy="380" r="56" fill="#8b5cf6" />
+        <text x="150" y="370" text-anchor="middle" fill="#fff" font-family="system-ui" font-size="20" font-weight="700">EXECUTE</text>
+        <text x="150" y="392" text-anchor="middle" fill="#ede9fe" font-family="system-ui" font-size="11">Tiered remediation</text>
+
+        <text x="150" y="232" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="600" fill="#0f172a">Critical → High → Medium → Low</text>
+        <text x="150" y="250" text-anchor="middle" font-family="system-ui" font-size="11" fill="#475569">One theme per PR. No tier closes</text>
+        <text x="150" y="264" text-anchor="middle" font-family="system-ui" font-size="11" fill="#475569">until every item has verification.</text>
+
+        <!-- Prove (bottom-right) -->
+        <circle cx="610" cy="380" r="56" fill="#10b981" />
+        <text x="610" y="370" text-anchor="middle" fill="#fff" font-family="system-ui" font-size="20" font-weight="700">PROVE</text>
+        <text x="610" y="392" text-anchor="middle" fill="#d1fae5" font-family="system-ui" font-size="11">Evidence required</text>
+
+        <text x="610" y="232" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="600" fill="#0f172a">Build + tests + log</text>
+        <text x="610" y="250" text-anchor="middle" font-family="system-ui" font-size="11" fill="#475569">Capture exact commands, exit codes,</text>
+        <text x="610" y="264" text-anchor="middle" font-family="system-ui" font-size="11" fill="#475569">stdout/stderr in verification-log.md.</text>
+
+        <!-- Arrows clockwise -->
+        <path d="M 410 116 Q 540 230 580 340" fill="none" stroke="#3b82f6" stroke-width="3" marker-end="url(#aepArrow)" />
+        <path d="M 555 410 Q 380 460 195 410" fill="none" stroke="#3b82f6" stroke-width="3" marker-end="url(#aepArrow)" />
+        <path d="M 180 340 Q 230 220 348 110" fill="none" stroke="#3b82f6" stroke-width="3" marker-end="url(#aepArrow)" />
+
+        <!-- Phase labels along the arrows -->
+        <text x="540" y="180" font-family="system-ui" font-size="12" fill="#1e40af" font-weight="600" transform="rotate(45 540 180)">plan → work</text>
+        <text x="370" y="450" font-family="system-ui" font-size="12" fill="#1e40af" font-weight="600">prove → loop</text>
+        <text x="200" y="180" font-family="system-ui" font-size="12" fill="#1e40af" font-weight="600" transform="rotate(-45 200 180)">prove → re-plan</text>
+      </svg>
+      <div class="diagram-caption" id="diag-tri-caption">Each pass through the triangle ends with a verification log, not with a green merge button. The next pass starts only after the last tier closes.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Phase 1 — Align</h2>
+    <p>The Align phase locks the scope before any code is touched. It exists because agentic workflows otherwise drift mid-execution: scope creeps, findings get re-prioritized, and the team loses its baseline.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Step 1 — Scope lock</h3>
+        <p class="muted">Define the PR range. Define the time window. Freeze the refinement report or framework input. After this step, no input gets edited until Execute begins.</p>
+      </div>
+      <div class="card">
+        <h3>Step 2 — Discovery + normalization</h3>
+        <p class="muted">Ingest the review framework. Normalize findings into a single backlog with unique IDs (<code>AEP-YYYYMMDD-PRNNN-SEQ</code>). De-duplicate, merge overlaps, assign provisional severity.</p>
+      </div>
+      <div class="card">
+        <h3>Step 3 — Parallel re-validation</h3>
+        <p class="muted">Specialist agents re-validate each finding against current main. Each agent attaches exact file paths, line ranges, smallest safe fix, and S/M/L sizing.</p>
+      </div>
+      <div class="card">
+        <h3>Step 4 — Architecture synthesis</h3>
+        <p class="muted">The orchestrator merges validated findings into a master backlog. Re-score using severity → impact × 1/effort → dependency order. Identify chains and blockers.</p>
+      </div>
+    </div>
+
+    <h3>Phase 1 W3 — Context and decisions discipline</h3>
+    <p>Bounded contexts get a <code>docs/contexts/&lt;slug&gt;/CONTEXT.md</code> file. Architecture decisions get an ADR in <code>docs/adr/</code>. ADRs only reach <code>Status: Accepted</code> after two Panel-of-Experts review passes. Reopening an Accepted ADR requires a new superseding ADR — the decision log is immutable history.</p>
+  </section>
+
+  <section>
+    <h2>Phase 2 — Execute</h2>
+    <p>Severity-tiered remediation. The tier order is <strong>Critical → High → Medium → Low</strong>. No tier advances until the current tier closes with verification evidence on every item.</p>
+
+    <div class="diagram" role="figure" aria-labelledby="diag-tier-caption">
+      <svg viewBox="0 0 760 200" width="760" height="200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Severity tiers shown as four ordered blocks from Critical to Low with an arrow showing forward-only progression">
+        <defs>
+          <marker id="tierArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+          </marker>
+        </defs>
+
+        <rect x="30" y="60" width="160" height="80" rx="10" fill="#fecaca" stroke="#dc2626" stroke-width="2" />
+        <text x="110" y="92" text-anchor="middle" font-family="system-ui" font-size="16" font-weight="700" fill="#991b1b">CRITICAL</text>
+        <text x="110" y="112" text-anchor="middle" font-family="system-ui" font-size="11" fill="#991b1b">Closes first</text>
+        <text x="110" y="128" text-anchor="middle" font-family="system-ui" font-size="10" fill="#991b1b">Blocking, must verify</text>
+
+        <line x1="190" y1="100" x2="220" y2="100" stroke="#3b82f6" stroke-width="3" marker-end="url(#tierArrow)" />
+
+        <rect x="220" y="60" width="150" height="80" rx="10" fill="#fed7aa" stroke="#ea580c" stroke-width="2" />
+        <text x="295" y="92" text-anchor="middle" font-family="system-ui" font-size="16" font-weight="700" fill="#9a3412">HIGH</text>
+        <text x="295" y="112" text-anchor="middle" font-family="system-ui" font-size="11" fill="#9a3412">Closes second</text>
+        <text x="295" y="128" text-anchor="middle" font-family="system-ui" font-size="10" fill="#9a3412">Risk memo on merge</text>
+
+        <line x1="370" y1="100" x2="400" y2="100" stroke="#3b82f6" stroke-width="3" marker-end="url(#tierArrow)" />
+
+        <rect x="400" y="60" width="150" height="80" rx="10" fill="#fde68a" stroke="#ca8a04" stroke-width="2" />
+        <text x="475" y="92" text-anchor="middle" font-family="system-ui" font-size="16" font-weight="700" fill="#854d0e">MEDIUM</text>
+        <text x="475" y="112" text-anchor="middle" font-family="system-ui" font-size="11" fill="#854d0e">Closes third</text>
+        <text x="475" y="128" text-anchor="middle" font-family="system-ui" font-size="10" fill="#854d0e">Batched PRs allowed</text>
+
+        <line x1="550" y1="100" x2="580" y2="100" stroke="#3b82f6" stroke-width="3" marker-end="url(#tierArrow)" />
+
+        <rect x="580" y="60" width="150" height="80" rx="10" fill="#bbf7d0" stroke="#16a34a" stroke-width="2" />
+        <text x="655" y="92" text-anchor="middle" font-family="system-ui" font-size="16" font-weight="700" fill="#14532d">LOW</text>
+        <text x="655" y="112" text-anchor="middle" font-family="system-ui" font-size="11" fill="#14532d">Closes last</text>
+        <text x="655" y="128" text-anchor="middle" font-family="system-ui" font-size="10" fill="#14532d">Or formally deferred</text>
+
+        <text x="380" y="180" text-anchor="middle" font-family="system-ui" font-size="11" fill="#64748b" font-style="italic">Forward-only. Blocked items elevate to immediate priority for unblock planning.</text>
+      </svg>
+      <div class="diagram-caption" id="diag-tier-caption">A blocked Critical item never lets a Medium item ship. The unblock plan is itself a finding to be remediated.</div>
+    </div>
+
+    <h3>Tier-close checklist (auditability)</h3>
+    <ul class="checklist">
+      <li>All findings in the tier show verification evidence in both tracker and cycle verification log.</li>
+      <li>Phase summaries exist for every PR in the tier.</li>
+      <li>Risk memos for Critical/High items are archived.</li>
+      <li>No item is left in "in progress" state — items are either closed or formally deferred.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Phase 3 — Prove</h2>
+    <p>Every merged fix requires auditable evidence. Verification is not a checkbox — it is an artifact.</p>
+    <div class="grid-2">
+      <div class="card">
+        <span class="badge">verification-log.md</span>
+        <h3>What gets logged</h3>
+        <ul class="checklist">
+          <li>Exact command with flags</li>
+          <li>Exit code</li>
+          <li>Summary of stdout/stderr; full output on failure</li>
+          <li>Environment (OS, runtime version, dependencies)</li>
+          <li>Baseline state (git SHA, branch)</li>
+          <li>Any flaky tests observed</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="badge alt">evaluation-harness.md</span>
+        <h3>How orchestration quality is judged</h3>
+        <ul class="checklist">
+          <li>Golden tasks for the agent type under test</li>
+          <li>Pass/fail against golden cases</li>
+          <li>Metrics across cycles (work density, clarification loops)</li>
+          <li>Persona effectiveness across sessions (via the meta-improvement cycle)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The test matrix</h2>
+    <p>The test matrix is the rule for which tests to run on a given change. Baseline tests run on every change; conditional tests run when the change touches a flagged area.</p>
+
+    <h3>Baseline (always)</h3>
+    <ul class="checklist">
+      <li>Unit tests — full suite</li>
+      <li>Lint/format checks</li>
+    </ul>
+
+    <h3>Conditional</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Change type</th><th>Additional tests</th></tr></thead>
+        <tbody>
+          <tr><td>Parser changes</td><td>Parser-specific tests + sample fixtures</td></tr>
+          <tr><td>IO / file handling</td><td>Integration tests for read/write paths</td></tr>
+          <tr><td>Performance changes</td><td>Benchmark or perf regression check</td></tr>
+          <tr><td>Security changes</td><td>Relevant security tests or static analysis</td></tr>
+          <tr><td>Documentation-only</td><td>Lint docs links and build docs if available</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Agent-specific selection</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Agent type</th><th>Minimum tests</th><th>Extended tests</th></tr></thead>
+        <tbody>
+          <tr><td>Implementer</td><td>Unit tests for changed modules</td><td>Full suite if touching shared code</td></tr>
+          <tr><td>Debugger</td><td>Failing test + related tests</td><td>Regression suite for the affected area</td></tr>
+          <tr><td>Refactorer</td><td>Full unit suite</td><td>Integration tests if API surface changed</td></tr>
+          <tr><td>Tester</td><td>(creates tests)</td><td>Run all new + existing tests</td></tr>
+          <tr><td>Reviewer</td><td>Read-only (no execution)</td><td>Optional spot-check of critical paths</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Partial runs — and how to do them honestly</h2>
+    <p>Sometimes the full test suite cannot run — a missing dependency, an unavailable external service, a documentation-only change. Partial runs are allowed but have a protocol:</p>
+    <ol>
+      <li><strong>Document the reason.</strong> Explain why the full suite was skipped.</li>
+      <li><strong>Select the minimum set.</strong> Smoke tests, or tests for the affected module only.</li>
+      <li><strong>Record the selection rationale.</strong> Link to the test matrix and the specific justification.</li>
+      <li><strong>Flag for follow-up.</strong> Note in the session log if a full run is still owed.</li>
+    </ol>
+    <p>A partial run with an honest log is fine. A partial run masquerading as a full run is the failure mode the verification log is designed to catch.</p>
+  </section>
+
+  <section>
+    <h2>The verification log</h2>
+    <p>Every PR in the cycle gets a row in <code>verification-log.md</code>. A row that lacks evidence is treated as failing the tier-close checklist.</p>
+<pre><code>| Finding ID            | PR    | Build    | Tests              | Result | Notes                          |
+|-----------------------|-------|----------|--------------------|--------|--------------------------------|
+| AEP-20260427-211-01   | #211  | passing  | vitest run (132/0) | PASS   | re-validated on origin/main    |
+| AEP-20260427-211-02   | #211  | passing  | smoke only         | PARTIAL| docs-only change, rationale in |
+|                       |       |          |                    |        | session log; full run deferred |
+| AEP-20260427-212-01   | #212  | passing  | vitest run (132/0) | PASS   | perf bench within 3% baseline  |</code></pre>
+  </section>
+
+  <section>
+    <h2>How AEP composes with other workflows</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>+ Panel of Experts</h3>
+        <p class="muted">Architecture decisions during Phase 1 W3 freeze through two panel-review passes. The challenge phase produces the dissent the ADR records.</p>
+      </div>
+      <div class="card">
+        <h3>+ Handoff protocol</h3>
+        <p class="muted">When ownership shifts between agents or sessions, the handoff protocol carries the AEP tracker state intact (last verification, next finding, open blockers).</p>
+      </div>
+      <div class="card">
+        <h3>+ TDD skill</h3>
+        <p class="muted">Phase 2 PRs that touch behavior commit a failing test first (the "red" reference), then the fix, then the verification log entry that names both commits.</p>
+      </div>
+      <div class="card">
+        <h3>+ Session retrospective miner</h3>
+        <p class="muted">An optional pre-Phase-1 step: mine the prior session window for narrative-quality scores below 50 and rewrite the phase specs before locking scope.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What to copy if you adopt this</h2>
+    <p>If you want to run AEP outside EVOKORE, the smallest viable adoption set is:</p>
+    <ul class="checklist">
+      <li><code>phase-planning.md</code> — a template for cycle metadata, phase goals, and dependency notes</li>
+      <li><code>test-matrix.md</code> — the baseline + conditional + agent-specific matrix above</li>
+      <li><code>verification-log.md</code> — the row-per-PR evidence table</li>
+      <li><code>templates.md</code> — finding-ID format, branch/commit conventions, rubrics</li>
+      <li>A clear tier-close checklist that refuses to advance without evidence</li>
+    </ul>
+    <p>The evaluation harness is optional but pays for itself by the second cycle.</p>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>Last built: 2026-05-20</span>
+    <span><a href="../wiki/index.html">Skill wiki</a> &middot; <a href="../README.md">EVOKORE-MCP repo</a></span>
+  </div>
+</footer>
+
+<script src="assets/diagrams.js"></script>
+</body>
+</html>

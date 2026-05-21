@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EVOKORE-MCP — Technical Analysis</title>
+<meta name="description" content="Runtime architecture, transport modes, native tool surface, and manager breakdown for EVOKORE-MCP." />
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-dot" aria-hidden="true"></span>EVOKORE-MCP<small>presentations</small></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html" data-nav="index.html">Home</a>
+      <a href="executive-summary.html" data-nav="executive-summary.html">Executive</a>
+      <a href="technical-analysis.html" data-nav="technical-analysis.html">Technical</a>
+      <a href="panel-of-experts.html" data-nav="panel-of-experts.html">Panel</a>
+      <a href="arch-aep-system.html" data-nav="arch-aep-system.html">AEP</a>
+      <a href="skill-spotlights.html" data-nav="skill-spotlights.html">Skills</a>
+      <a href="workflows.html" data-nav="workflows.html">Workflows</a>
+      <a class="repo" href="../README.md">Back to repo</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-intro">
+    <div class="kicker">Technical analysis</div>
+    <h1>The runtime, in detail</h1>
+    <p>EVOKORE-MCP is a TypeScript stdio MCP router on Node 18+. It merges 37 native tools with a configurable set of proxied child MCP servers, projects that combined surface in either <code>legacy</code> or <code>dynamic</code> mode, and applies RBAC, rate limiting, and async proxy boot on top.</p>
+  </section>
+
+  <div class="two-col">
+    <div>
+
+      <section>
+        <h2>System architecture</h2>
+        <p>Everything an AI client sees passes through a single stdio transport. Behind that transport, native tools and proxied child servers cohabit one unified catalog.</p>
+
+        <div class="diagram" role="figure" aria-labelledby="diag-arch-caption">
+          <svg viewBox="0 0 760 460" width="760" height="460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="EVOKORE-MCP system architecture diagram showing AI client, stdio transport, router, native and proxy managers, and child servers">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b" />
+              </marker>
+              <marker id="arrowAccent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+              </marker>
+            </defs>
+
+            <!-- Client -->
+            <rect x="270" y="14" width="220" height="50" rx="6" fill="#1e293b" />
+            <text x="380" y="38" text-anchor="middle" fill="#fff" font-family="system-ui" font-size="14" font-weight="700">AI client</text>
+            <text x="380" y="54" text-anchor="middle" fill="#cbd5e1" font-family="system-ui" font-size="11">Claude / Cursor / Codex / Gemini</text>
+
+            <!-- stdio arrow -->
+            <line x1="380" y1="64" x2="380" y2="94" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowAccent)" />
+            <text x="392" y="84" fill="#3b82f6" font-family="system-ui" font-size="11">stdio</text>
+
+            <!-- Router -->
+            <rect x="230" y="98" width="300" height="60" rx="8" fill="#3b82f6" />
+            <text x="380" y="124" text-anchor="middle" fill="#fff" font-family="system-ui" font-size="14" font-weight="700">EVOKORE Router (src/index.ts)</text>
+            <text x="380" y="142" text-anchor="middle" fill="#dbeafe" font-family="system-ui" font-size="11">tools/list + tools/call + resources + prompts</text>
+
+            <!-- Three sub-pillars -->
+            <line x1="320" y1="158" x2="170" y2="200" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)" />
+            <line x1="380" y1="158" x2="380" y2="200" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)" />
+            <line x1="440" y1="158" x2="590" y2="200" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)" />
+
+            <!-- ToolCatalogIndex -->
+            <rect x="90" y="200" width="160" height="46" rx="6" fill="#fff" stroke="#cbd5e1" />
+            <text x="170" y="220" text-anchor="middle" fill="#0f172a" font-family="system-ui" font-size="12" font-weight="700">ToolCatalogIndex</text>
+            <text x="170" y="236" text-anchor="middle" fill="#64748b" font-family="system-ui" font-size="10">legacy / dynamic projection</text>
+
+            <!-- SkillManager -->
+            <rect x="300" y="200" width="160" height="46" rx="6" fill="#fff" stroke="#cbd5e1" />
+            <text x="380" y="220" text-anchor="middle" fill="#0f172a" font-family="system-ui" font-size="12" font-weight="700">SkillManager + 9 more</text>
+            <text x="380" y="236" text-anchor="middle" fill="#64748b" font-family="system-ui" font-size="10">37 native tools</text>
+
+            <!-- ProxyManager -->
+            <rect x="510" y="200" width="160" height="46" rx="6" fill="#fff" stroke="#cbd5e1" />
+            <text x="590" y="220" text-anchor="middle" fill="#0f172a" font-family="system-ui" font-size="12" font-weight="700">ProxyManager</text>
+            <text x="590" y="236" text-anchor="middle" fill="#64748b" font-family="system-ui" font-size="10">async child boot + prefixing</text>
+
+            <!-- Security gate -->
+            <rect x="510" y="262" width="160" height="36" rx="6" fill="#fef3c7" stroke="#f59e0b" />
+            <text x="590" y="284" text-anchor="middle" fill="#78350f" font-family="system-ui" font-size="12" font-weight="700">SecurityManager + RBAC</text>
+            <line x1="590" y1="246" x2="590" y2="262" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arrow)" />
+
+            <!-- Skills source -->
+            <rect x="300" y="262" width="160" height="36" rx="6" fill="#f1f5f9" stroke="#cbd5e1" />
+            <text x="380" y="284" text-anchor="middle" fill="#0f172a" font-family="system-ui" font-size="12" font-weight="700">SKILLS/ on disk</text>
+            <line x1="380" y1="246" x2="380" y2="262" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)" />
+
+            <!-- Child servers row -->
+            <rect x="420" y="318" width="80" height="36" rx="6" fill="#1e293b" />
+            <text x="460" y="340" text-anchor="middle" fill="#fff" font-family="system-ui" font-size="11" font-weight="600">github</text>
+
+            <rect x="510" y="318" width="80" height="36" rx="6" fill="#1e293b" />
+            <text x="550" y="340" text-anchor="middle" fill="#fff" font-family="system-ui" font-size="11" font-weight="600">fs</text>
+
+            <rect x="600" y="318" width="80" height="36" rx="6" fill="#334155" />
+            <text x="640" y="335" text-anchor="middle" fill="#fff" font-family="system-ui" font-size="11" font-weight="600">elevenlabs</text>
+            <text x="640" y="348" text-anchor="middle" fill="#94a3b8" font-family="system-ui" font-size="9">optional</text>
+
+            <rect x="510" y="362" width="80" height="36" rx="6" fill="#334155" />
+            <text x="550" y="379" text-anchor="middle" fill="#fff" font-family="system-ui" font-size="11" font-weight="600">supabase</text>
+            <text x="550" y="392" text-anchor="middle" fill="#94a3b8" font-family="system-ui" font-size="9">optional</text>
+
+            <rect x="600" y="362" width="80" height="36" rx="6" fill="#334155" />
+            <text x="640" y="379" text-anchor="middle" fill="#fff" font-family="system-ui" font-size="11" font-weight="600">RE child*</text>
+            <text x="640" y="392" text-anchor="middle" fill="#94a3b8" font-family="system-ui" font-size="9">opt-in</text>
+
+            <line x1="590" y1="298" x2="460" y2="318" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)" />
+            <line x1="590" y1="298" x2="550" y2="318" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)" />
+            <line x1="590" y1="298" x2="640" y2="318" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)" />
+            <line x1="590" y1="298" x2="640" y2="362" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)" />
+            <line x1="590" y1="298" x2="550" y2="362" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)" />
+
+            <!-- Sidecars on the side -->
+            <rect x="40" y="318" width="190" height="36" rx="6" fill="#8b5cf6" />
+            <text x="135" y="340" text-anchor="middle" fill="#fff" font-family="system-ui" font-size="12" font-weight="700">VoiceSidecar @ ws:8888</text>
+
+            <rect x="40" y="362" width="190" height="36" rx="6" fill="#10b981" />
+            <text x="135" y="384" text-anchor="middle" fill="#fff" font-family="system-ui" font-size="12" font-weight="700">Dashboard @ 127.0.0.1:8899</text>
+
+            <!-- Hooks state -->
+            <rect x="270" y="410" width="220" height="36" rx="6" fill="#f1f5f9" stroke="#cbd5e1" />
+            <text x="380" y="432" text-anchor="middle" fill="#0f172a" font-family="system-ui" font-size="12" font-weight="700">~/.evokore/ — session state &amp; logs</text>
+            <line x1="380" y1="298" x2="380" y2="410" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3" />
+
+            <text x="20" y="450" fill="#64748b" font-family="system-ui" font-size="10">*RE: ghidra_headless, reva, binary_analysis (opt-in local servers)</text>
+          </svg>
+          <div class="diagram-caption" id="diag-arch-caption">A single stdio transport carries every tool call. Native managers and the proxy manager hand back into one merged catalog projected to the client.</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Runtime layers</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Layer</th><th>Implementation</th><th>Responsibility</th></tr></thead>
+            <tbody>
+              <tr><td>MCP server</td><td><code>src/index.ts</code></td><td>stdio transport, request handlers, resources/prompts, discovery mode projection, session activation state</td></tr>
+              <tr><td>Native tool layer</td><td>10 manager classes</td><td>37 EVOKORE-native tools, skill index, sessions, claims, fleet, memory, telemetry, navigation, plugins</td></tr>
+              <tr><td>Proxy layer</td><td><code>src/ProxyManager.ts</code></td><td>boots child servers over stdio or HTTP, prefixes tools, applies rate limiting and cooldown, async boot</td></tr>
+              <tr><td>Security layer</td><td><code>src/SecurityManager.ts</code> + <code>permissions.yml</code></td><td>allow / require_approval / deny policy with RBAC overlay</td></tr>
+              <tr><td>Catalog layer</td><td><code>src/ToolCatalogIndex.ts</code></td><td>unified native + proxied catalog, search index, projection for dynamic mode</td></tr>
+              <tr><td>Continuity layer</td><td><code>scripts/</code> + <code>~/.evokore/</code></td><td>session manifest, status runtime, memory sync, repo-state audit</td></tr>
+              <tr><td>Voice side runtime</td><td><code>src/VoiceSidecar.ts</code></td><td>standalone WebSocket server, not part of stdio routing</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>Transport and discovery modes</h2>
+        <h3>Transports</h3>
+        <p>EVOKORE itself speaks stdio to the AI client. Child MCP servers can be reached via two transports:</p>
+        <ul class="checklist">
+          <li><strong>stdio</strong> — the common case. EVOKORE spawns the child process and pipes JSON-RPC over stdin/stdout.</li>
+          <li><strong>HTTP (StreamableHTTPClientTransport)</strong> — for hosted child servers. Set <code>"transport": "http"</code> and <code>"url"</code> in <code>mcp.config.json</code>.</li>
+        </ul>
+
+        <h3>Discovery modes</h3>
+        <p>The same set of tools can be projected to the AI client two ways:</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Mode</th><th>Behavior</th><th>When to use</th></tr></thead>
+            <tbody>
+              <tr><td><code>legacy</code></td><td>tools/list returns every native + proxied tool</td><td>Older clients that don't poll for tools/list_changed, or sessions where compatibility beats context economy.</td></tr>
+              <tr><td><code>dynamic</code></td><td>tools/list returns native tools + only the proxied tools the current session has activated via <code>discover_tools</code></td><td>Focused sessions, clients sensitive to tool-list size, contexts where 200+ tools would otherwise crowd the window. Hidden tools remain callable by exact prefixed name.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>Native tool surface</h2>
+        <p>37 native tools across 10 managers. Native tools are always visible, even in dynamic mode.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Manager</th><th>Count</th><th>Tools</th></tr></thead>
+            <tbody>
+              <tr><td><strong>SkillManager</strong></td><td>12</td><td><code>docs_architect</code>, <code>skill_creator</code>, <code>resolve_workflow</code>, <code>search_skills</code>, <code>get_skill_help</code>, <code>discover_tools</code>, <code>proxy_server_status</code>, <code>refresh_skills</code>, <code>fetch_skill</code>, <code>list_registry</code>, <code>execute_skill</code>, <code>describe_tool</code></td></tr>
+              <tr><td><strong>ClaimsManager</strong></td><td>4</td><td><code>claim_acquire</code>, <code>claim_release</code>, <code>claim_list</code>, <code>claim_sweep</code></td></tr>
+              <tr><td><strong>FleetManager</strong></td><td>4</td><td><code>fleet_spawn</code>, <code>fleet_claim</code>, <code>fleet_release</code>, <code>fleet_status</code></td></tr>
+              <tr><td><strong>SessionAnalyticsManager</strong></td><td>4</td><td><code>session_context_health</code>, <code>session_analyze_replay</code>, <code>session_work_ratio</code>, <code>session_trust_report</code></td></tr>
+              <tr><td><strong>MemoryManager</strong></td><td>3</td><td><code>memory_store</code>, <code>memory_search</code>, <code>memory_list</code></td></tr>
+              <tr><td><strong>OrchestrationRuntime</strong></td><td>3</td><td><code>orchestration_start</code>, <code>orchestration_stop</code>, <code>orchestration_status</code></td></tr>
+              <tr><td><strong>TelemetryManager</strong></td><td>2</td><td><code>get_telemetry</code>, <code>reset_telemetry</code></td></tr>
+              <tr><td><strong>WorkerManager</strong></td><td>2</td><td><code>worker_dispatch</code>, <code>worker_context</code></td></tr>
+              <tr><td><strong>NavigationAnchorManager</strong></td><td>2</td><td><code>nav_get_map</code>, <code>nav_read_anchor</code></td></tr>
+              <tr><td><strong>PluginManager</strong></td><td>1</td><td><code>reload_plugins</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Every native tool carries MCP annotations (<code>readOnlyHint</code>, <code>destructiveHint</code>, <code>idempotentHint</code>, <code>openWorldHint</code>) plus a human-readable title, so MCP-aware clients can render appropriate confirmation UI.</p>
+      </section>
+
+      <section>
+        <h2>Tool call lifecycle</h2>
+        <div class="diagram" role="figure" aria-labelledby="diag-call-caption">
+          <svg viewBox="0 0 760 320" width="760" height="320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sequence diagram of a tools/call dispatch through router, security manager, and upstream child server">
+            <defs>
+              <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+              </marker>
+              <marker id="arrow2dot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b" />
+              </marker>
+            </defs>
+
+            <!-- Lifelines -->
+            <g font-family="system-ui" font-size="12" font-weight="700" fill="#0f172a">
+              <text x="80"  y="22">Client</text>
+              <text x="220" y="22">Router</text>
+              <text x="370" y="22">SecurityManager</text>
+              <text x="540" y="22">ProxyManager</text>
+              <text x="690" y="22">Upstream</text>
+            </g>
+
+            <g stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3,4">
+              <line x1="100" y1="34" x2="100" y2="300" />
+              <line x1="240" y1="34" x2="240" y2="300" />
+              <line x1="400" y1="34" x2="400" y2="300" />
+              <line x1="560" y1="34" x2="560" y2="300" />
+              <line x1="700" y1="34" x2="700" y2="300" />
+            </g>
+
+            <!-- Step 1 tools/call -->
+            <line x1="100" y1="60" x2="240" y2="60" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow2)" />
+            <text x="170" y="54" text-anchor="middle" font-family="system-ui" font-size="11" fill="#1e293b">tools/call(name, args)</text>
+
+            <!-- 2 Native branch -->
+            <rect x="138" y="78" width="124" height="22" rx="4" fill="#dbeafe" stroke="#3b82f6" />
+            <text x="200" y="94" text-anchor="middle" font-family="system-ui" font-size="10" fill="#1e293b">alt: native tool — dispatched in-process</text>
+
+            <!-- 3 proxied -->
+            <line x1="240" y1="120" x2="400" y2="120" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow2)" />
+            <text x="320" y="114" text-anchor="middle" font-family="system-ui" font-size="11" fill="#1e293b">check permission(name, args)</text>
+
+            <!-- Approval block -->
+            <rect x="248" y="138" width="304" height="56" rx="4" fill="#fef3c7" stroke="#f59e0b" />
+            <text x="400" y="156" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="700" fill="#78350f">if require_approval and token missing</text>
+            <text x="400" y="172" text-anchor="middle" font-family="system-ui" font-size="10" fill="#78350f">mint _evokore_approval_token, return retry instructions</text>
+            <text x="400" y="186" text-anchor="middle" font-family="system-ui" font-size="10" fill="#78350f">client asks human, retries with exact same args + token</text>
+            <line x1="240" y1="210" x2="100" y2="210" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrow2dot)" />
+            <text x="170" y="204" text-anchor="middle" font-family="system-ui" font-size="11" fill="#b45309">HITL intercept (one-time, args-bound)</text>
+
+            <!-- Allowed path -->
+            <line x1="240" y1="238" x2="560" y2="238" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow2)" />
+            <text x="400" y="232" text-anchor="middle" font-family="system-ui" font-size="11" fill="#1e293b">if allowed: forward to ProxyManager</text>
+
+            <line x1="560" y1="260" x2="700" y2="260" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow2)" />
+            <text x="630" y="254" text-anchor="middle" font-family="system-ui" font-size="11" fill="#1e293b">callTool(unprefixed name)</text>
+
+            <line x1="700" y1="282" x2="100" y2="282" stroke="#10b981" stroke-width="2" stroke-dasharray="2,2" />
+            <text x="400" y="276" text-anchor="middle" font-family="system-ui" font-size="11" fill="#047857">result returned along the chain</text>
+          </svg>
+          <div class="diagram-caption" id="diag-call-caption">Native tools dispatch in-process. Proxied tools pass through the security manager; sensitive ones return an approval token instead of running.</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Async proxy boot</h2>
+        <p>EVOKORE completes the MCP handshake before any child server has finished booting. Background boot avoids holding the client hostage on the slowest dependency:</p>
+        <ol>
+          <li>Load <code>.env</code> and initialize the MCP server capabilities.</li>
+          <li>Index skills from <code>SKILLS/</code> (optionally watched).</li>
+          <li>Connect stdio transport and start serving requests immediately.</li>
+          <li>In the background: load <code>mcp.config.json</code>, resolve <code>${VAR}</code> placeholders, spawn each child, fetch its tool list, prefix and register, rebuild the catalog.</li>
+          <li>Emit <code>"Proxy bootstrap complete"</code> or <code>"Background proxy bootstrap failed"</code> on stderr.</li>
+        </ol>
+        <p>Native tools are usable instantly; proxied tools appear as their child server finishes. Configure the boot timeout with <code>EVOKORE_CHILD_SERVER_BOOT_TIMEOUT_MS</code> (default 30 seconds).</p>
+      </section>
+
+      <section>
+        <h2>RBAC and rate limiting</h2>
+        <h3>Roles</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Role</th><th>Default permission</th><th>Effective behavior</th></tr></thead>
+            <tbody>
+              <tr><td><code>admin</code></td><td><code>allow</code></td><td>Full access to all proxied tools.</td></tr>
+              <tr><td><code>developer</code></td><td><code>require_approval</code></td><td>Reads allowed, writes gated, destructive denied unless overridden.</td></tr>
+              <tr><td><code>readonly</code></td><td><code>deny</code></td><td>Only explicitly overridden reads are allowed.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Set <code>EVOKORE_ROLE</code> to opt in. When unset, EVOKORE falls back to the flat <code>rules:</code> block — fully backwards-compatible.</p>
+
+        <h3>Rate limiting</h3>
+        <p>A token-bucket rate limiter runs per child server (and optionally per tool). Configure <code>maxTokens</code>, <code>refillRate</code>, and <code>refillIntervalMs</code> under <code>rateLimit</code> in <code>mcp.config.json</code>. It is independent of the error-triggered cooldown that ProxyManager applies to flapping upstream tools.</p>
+      </section>
+
+      <section>
+        <h2>Resources and prompts</h2>
+        <p>EVOKORE exposes MCP <code>resources</code> and <code>prompts</code> on top of <code>tools</code>:</p>
+        <ul class="checklist">
+          <li><code>resources/list</code> returns skills as <code>skill://{category}/{name}</code> URIs plus server-level resources (<code>evokore://server/status</code>, <code>evokore://server/config</code>, <code>evokore://skills/categories</code>).</li>
+          <li><code>prompts/list</code> returns three prompts: <code>resolve-workflow</code>, <code>skill-help</code>, <code>server-overview</code>.</li>
+          <li><code>resources/read</code> and <code>prompts/get</code> return the underlying content with consistent shape so clients can render them uniformly.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Session continuity</h2>
+        <p>State that survives a restart lives in <code>~/.evokore/</code>, not in the MCP process. The canonical manifest is at <code>~/.evokore/sessions/{sessionId}.json</code> and is the single source of truth for purpose, lifecycle, and artifact pointers.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Path</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>~/.evokore/sessions/{sessionId}.json</code></td><td>Session manifest: purpose, status, artifact pointers</td></tr>
+              <tr><td><code>~/.evokore/sessions/*-replay.jsonl</code></td><td>Append-only replay log of every tool call</td></tr>
+              <tr><td><code>~/.evokore/sessions/*-evidence.jsonl</code></td><td>Captured verification, file change, and git evidence</td></tr>
+              <tr><td><code>~/.evokore/sessions/*-tasks.json</code></td><td>TillDone task list for the session</td></tr>
+              <tr><td><code>~/.evokore/logs/hooks.jsonl</code></td><td>Hook observability log (rotated)</td></tr>
+              <tr><td><code>~/.evokore/pending-approvals.json</code></td><td>Live approval queue surfaced by the dashboard</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+    <aside>
+
+      <div class="bhk">
+        <h3>What new users trip on</h3>
+        <ol>
+          <li><strong>Schema-deferred mode is opt-in and not safe for most clients.</strong> Leave it off unless you control the client and have tested it. <span class="severity" data-sev="5">SEV 5</span></li>
+          <li><strong>tools/list_changed is best-effort, not guaranteed.</strong> Some clients ignore it and need a manual <code>tools/list</code> refresh after <code>discover_tools</code>. <span class="severity" data-sev="4">SEV 4</span></li>
+          <li><strong>Windows command resolution differs.</strong> Only <code>npx</code> is remapped to <code>npx.cmd</code>; <code>uv</code> and <code>uvx</code> must already resolve on PATH. <span class="severity" data-sev="4">SEV 4</span></li>
+          <li><strong>Unresolved <code>${VAR}</code> placeholders fail fast for that child server only.</strong> The router stays up; missing-env errors do not surface unless you read stderr. <span class="severity" data-sev="4">SEV 4</span></li>
+          <li><strong>Cooldown is not the same as rate limiting.</strong> Cooldown reacts to repeated upstream errors and can mask real failures. Inspect with <code>proxy_server_status</code>. <span class="severity" data-sev="3">SEV 3</span></li>
+          <li><strong>Skill watcher is opt-in.</strong> Set <code>EVOKORE_SKILL_WATCHER=true</code> to auto-reindex; otherwise call <code>refresh_skills</code> manually. <span class="severity" data-sev="3">SEV 3</span></li>
+          <li><strong>HITL tokens are one-shot and exact-args-bound.</strong> Reissue if the retry changes any argument. <span class="severity" data-sev="3">SEV 3</span></li>
+        </ol>
+      </div>
+
+      <section>
+        <h2>Quick numbers</h2>
+        <div class="stat-row">
+          <div class="stat"><div class="num">37</div><div class="label">Native tools</div></div>
+          <div class="stat"><div class="num">10</div><div class="label">Managers</div></div>
+          <div class="stat"><div class="num">266</div><div class="label">Skills</div></div>
+          <div class="stat"><div class="num">2</div><div class="label">Transports</div></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Tech stack</h2>
+        <ul class="checklist">
+          <li>TypeScript on Node <code>&gt;=18</code></li>
+          <li><code>@modelcontextprotocol/sdk</code></li>
+          <li><code>dotenv</code> for env loading</li>
+          <li><code>yaml</code> for skill frontmatter</li>
+          <li><code>fuse.js</code> for fuzzy search</li>
+          <li><code>ws</code> for the voice WebSocket</li>
+          <li>Node + <code>tsx</code> for validation scripts</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Env knobs you'll actually set</h2>
+<pre><code>EVOKORE_TOOL_DISCOVERY_MODE=legacy
+EVOKORE_DISCOVERY_PROFILE=coding
+EVOKORE_TOOL_LIST_PAGINATION=on
+EVOKORE_TOOL_SCHEMA_MODE=full
+EVOKORE_ROLE=developer
+EVOKORE_SKILL_WATCHER=true
+EVOKORE_CHILD_SERVER_BOOT_TIMEOUT_MS=30000</code></pre>
+      </section>
+
+    </aside>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>Last built: 2026-05-20</span>
+    <span><a href="../wiki/index.html">Skill wiki</a> &middot; <a href="../README.md">EVOKORE-MCP repo</a></span>
+  </div>
+</footer>
+
+<script src="assets/diagrams.js"></script>
+</body>
+</html>

@@ -1,0 +1,427 @@
+# EVOKORE-MCP Damage Control Rules
+# Used by scripts/damage-control.js (PreToolUse hook)
+#
+# Rule IDs:
+#   DC-01..DC-14: Baseline protections
+#   DC-15..DC-30: Post-roadmap expansion covering reverse shells,
+#                 encoded payloads, exfiltration, and repo guardrails
+#   DC-33..DC-43: git/gh guardrail expansion. New rules use the
+#                 `argv_match:` schema (argv-token aware) instead of regex
+#                 against the joined command string. Legacy `pattern:` rules
+#                 continue to work unchanged.
+
+dangerous_commands:
+  - id: DC-01
+    pattern: 'rm\s+(-[a-zA-Z]*f[a-zA-Z]*\s+|--force\s+)\S+'
+    reason: 'Recursive forced deletion detected'
+    ask: false
+  - id: DC-02
+    pattern: 'rm\s+-[a-zA-Z]*r[a-zA-Z]*\s+(~|/|\$HOME|C:\\)'
+    reason: 'Recursive deletion of home/root directory'
+    ask: false
+  - id: DC-03
+    # Tightened in W0g: also catches short-flag `git push -f` and compound
+    # short flags such as `-uf`. Matches `--force`, `--force-with-lease`,
+    # and `-f` while leaving `git push -u origin feature` untouched.
+    # `--force-with-lease` is intentionally caught here at ask=true so the
+    # operator confirms even the safer lease form; DC-33 narrows the
+    # protected-ref subcase further (still ask=true for lease, hard block
+    # for raw --force/-f to main).
+    pattern: 'git\s+push\b[^|;&\n]*?(?:\s--force\b|\s-(?:[a-zA-Z]*f[a-zA-Z]*)\b)'
+    reason: 'Force push can overwrite remote history'
+    ask: true
+  - id: DC-04
+    pattern: 'git\s+reset\s+--hard'
+    reason: 'Hard reset discards uncommitted changes'
+    ask: true
+  - id: DC-05
+    pattern: 'git\s+clean\s+-[a-zA-Z]*f'
+    reason: 'git clean -f permanently deletes untracked files'
+    ask: true
+  - id: DC-06
+    pattern: 'DROP\s+(TABLE|DATABASE|SCHEMA)'
+    reason: 'SQL DROP is destructive and irreversible'
+    ask: false
+  - id: DC-07
+    pattern: 'TRUNCATE\s+TABLE'
+    reason: 'TRUNCATE removes all data from table'
+    ask: true
+  - id: DC-08
+    pattern: ':\(\)\s*\{|fork\s*bomb'
+    reason: 'Fork bomb detected'
+    ask: false
+  - id: DC-09
+    pattern: 'npm\s+publish'
+    reason: 'Publishing to npm registry'
+    ask: true
+  - id: DC-10
+    pattern: 'curl\s+.*\|\s*(bash|sh|zsh)'
+    reason: 'Piping remote script to shell'
+    ask: false
+  - id: DC-11
+    pattern: '(?:^|[;&|]\s*)chmod\s+777'
+    reason: 'Setting world-writable permissions'
+    ask: true
+  - id: DC-12
+    pattern: '(?:^|[;&|]\s*)(?:mkfs\b|format\s+[A-Z]:)'
+    reason: 'Filesystem format command detected'
+    ask: false
+  - id: DC-13
+    pattern: '>(\s*/dev/sd|\\\\\.\\\\PhysicalDrive)'
+    reason: 'Direct write to disk device'
+    ask: false
+  - id: DC-14
+    pattern: '(?:^|&&|;|\|)\s*(?:shutdown|reboot|init\s+[06])\b'
+    reason: 'System shutdown/reboot command'
+    ask: true
+  - id: DC-15
+    pattern: '/dev/(tcp|udp)/'
+    reason: 'Reverse shell via /dev/tcp or /dev/udp'
+    ask: false
+  - id: DC-16
+    pattern: '\bnc\b.*\s-[a-zA-Z]*e'
+    reason: 'Netcat with -e flag (remote code execution)'
+    ask: false
+  - id: DC-17
+    pattern: 'base64\s+(-d|--decode).*\|\s*(bash|sh|zsh|dash)'
+    reason: 'Decoded payload piped to shell'
+    ask: false
+  - id: DC-18
+    pattern: '(wget|curl)\s.*(-o|-O)\s+\S+.*&&.*(bash|sh|chmod\s+\+x|\.\/)'
+    reason: 'Download-and-execute pattern'
+    ask: false
+  - id: DC-19
+    pattern: ';\s*(rm\s|del\s|format\s+[A-Z]:|mkfs|dd\s+.*of=)'
+    reason: 'Semicolon-chained destructive command'
+    ask: false
+  - id: DC-20
+    pattern: '\|\s*xargs\s+.*\brm\b'
+    reason: 'Piped deletion via xargs'
+    ask: true
+  - id: DC-21
+    pattern: '(?:^|[;&|]\s*)sudo\b'
+    reason: 'Privilege escalation via sudo'
+    ask: true
+  - id: DC-22
+    pattern: '^\s*(printenv|env)\s*$'
+    reason: 'Full environment variable dump'
+    ask: true
+  - id: DC-23
+    pattern: 'docker\s+run\s+.*(--privileged|--pid=host|/var/run/docker\.sock)'
+    reason: 'Docker container escape vector'
+    ask: true
+  - id: DC-24
+    pattern: '\bln\s+.*-[sf]*s.*(\.(env|ssh)|credentials|secrets|id_rsa|id_ed25519|\.gnupg)'
+    reason: 'Symlink to sensitive file or directory'
+    ask: false
+  - id: DC-25
+    pattern: '(\bnc\b.*\s-[a-zA-Z]*l|python[23]?\s.*http\.server)'
+    reason: 'Network listener (nc -l or python http.server)'
+    ask: true
+  - id: DC-26
+    pattern: '\beval\s*\('
+    reason: 'eval() call detected — potential code injection'
+    ask: true
+  - id: DC-27
+    pattern: '\bsource\s+<\(|(?:^|\s)\.\s+<\('
+    reason: 'Source from process substitution'
+    ask: false
+  - id: DC-28
+    pattern: '(curl|wget)\s.*(-d\s+@|--data-binary\s+@|--post-file)'
+    reason: 'HTTP POST with local file data'
+    ask: true
+  - id: DC-29
+    pattern: '\bdd\b.*\bof='
+    reason: 'dd write operation'
+    ask: true
+  - id: DC-30
+    pattern: 'git\s+config\s+.*credential'
+    reason: 'Git credential configuration manipulation'
+    ask: true
+  - id: DC-31
+    pattern: '\bexec\s*\('
+    reason: 'exec() call detected — potential command execution'
+    ask: true
+  - id: DC-32
+    pattern: 'git\s+remote\s+set-url'
+    reason: 'Git remote URL modification — potential supply chain attack'
+    ask: false
+  - id: DC-44
+    # TDD red-commit-hash convention (advisory).
+    # Matches `git commit -m "..."` whose inline message body mentions a
+    # test file (e.g. *.test.ts, *_test.py, *.spec.tsx) but does NOT
+    # include a `Test-Red: <40-hex-SHA>` footer. Surfaces an `ask` so the
+    # operator can confirm the GREEN commit references the prior RED SHA.
+    # ask: true rather than block — too noisy to hard-block today.
+    # See SKILLS/ORCHESTRATION FRAMEWORK/commands/orch-tdd/SKILL.md
+    # ("Red-commit-hash evidence rule") and scripts/validate-tdd-evidence.js.
+    pattern: 'git\s+commit\s+-m\s+"(?=[^"]*\b\S+\.(?:test|spec)\.[a-z]+\b)(?:(?!Test-Red:\s*[0-9a-fA-F]{40})[\s\S])*"'
+    reason: 'TDD: commit touches a test file but lacks `Test-Red: <40-hex-SHA>` footer (orch-tdd advisory)'
+    ask: true
+
+  # ---------------------------------------------------------------------------
+  # argv-aware git/gh guardrails (DC-33..DC-43)
+  #
+  # These rules use the `argv_match:` schema, evaluated by the argv-aware
+  # matcher in scripts/damage-control.js. Argv parsing avoids the false
+  # positives that regex-on-joined-string produces for legitimate forms
+  # documented in CLAUDE.md (e.g., `git submodule add`, `git checkout -f`,
+  # `git log -f`, `git push --force-with-lease origin chore/control-plane-*`).
+  # See `tests/fixtures/damage-control/git-guardrails.yaml` for the full
+  # positive/negative case matrix.
+  # ---------------------------------------------------------------------------
+
+  - id: DC-33
+    description: 'Force-push to a protected ref (main/master/release/*).'
+    severity: block          # raw --force / -f to a protected ref is a hard block
+    warn_severity: warn      # --force-with-lease to a protected ref → warn (ask)
+    category: git_force_push
+    argv_match:
+      program: git
+      subcommand: push
+      require_any_flag: ['--force', '-f']
+      lease_flags: ['--force-with-lease']
+      protected_refs: ['main', 'master']
+      protected_ref_globs: ['release/*']
+      allow_branch_globs: ['chore/control-plane-*']
+    reason: 'Force push to protected ref (main/master/release/*) — refusing without explicit override.'
+    _rationale: |
+      Panel-of-15 consensus: a single prevented force-push to main pays for
+      the entire W0g effort. `--force-with-lease` to chore/control-plane-* is
+      explicitly allow-listed (CLAUDE.md "Control-Plane Preservation PRs" /
+      "Stale Feature Replay" workflows). Lease-form pushes to protected
+      branches still warn so the operator confirms.
+
+  - id: DC-34
+    description: 'Working-tree wipe via checkout/restore/clean.'
+    severity: block
+    category: git_wipe_worktree
+    argv_match:
+      any_of:
+        - { program: git, subcommand: checkout, require_token: '.' }
+        - { program: git, subcommand: restore,  require_token: '.' }
+        - { program: git, subcommand: checkout, require_sequence: ['--', '.'] }
+        - { program: git, subcommand: restore,  require_all_flags: ['--staged', '--worktree'], require_token: '.' }
+        - { program: git, subcommand: clean,    require_compound_short_flags: ['f', 'd', 'x'], allow_paths_after_flags: false }
+        - { program: git, subcommand: clean,    require_compound_short_flags: ['f', 'd'], require_long_flag_any: ['-x'] }
+    reason: 'Working-tree wipe (git checkout . / git restore . / git clean -fdx) destroys uncommitted changes irreversibly.'
+    _rationale: |
+      CLAUDE.md "Git Safety Protocol" forbids `checkout .`, `restore .`,
+      `clean -f` without explicit user request. `git clean -n` (dry run) and
+      `git clean -fd <specific path>` remain allowed via the
+      `allow_paths_after_flags` discriminator.
+
+  - id: DC-35
+    description: 'History rewrite on shared branches (filter-branch / filter-repo / interactive rebase onto main).'
+    severity: block
+    category: git_rewrite_history
+    argv_match:
+      any_of:
+        - { program: git, subcommand: filter-branch }
+        - { program: git, subcommand: filter-repo }
+        - { program: git, subcommand: rebase, require_any_flag: ['-i', '--interactive'], target_protected_refs: ['main', 'master', 'origin/main', 'origin/master'] }
+    reason: 'History rewrite on a shared/protected branch — filter-branch/filter-repo or interactive rebase onto main rewrites public history.'
+    _rationale: |
+      Non-interactive `git rebase main` (porting a topic branch) remains
+      allowed. `git rebase -i topic-branch` (rewriting your own work) is
+      allowed. Only interactive rebase ONTO main/origin/main is blocked.
+      Mirrors CLAUDE.md "Git Safety Protocol" + "Stale Feature Replay" rule
+      that legitimate replay is non-interactive.
+
+  - id: DC-36
+    description: 'Ref deletion of protected refs (main/master/release/*).'
+    severity: block
+    category: git_delete_protected_ref
+    argv_match:
+      any_of:
+        - { program: git, subcommand: push, require_token_glob: ':main' }
+        - { program: git, subcommand: push, require_token_glob: ':master' }
+        - { program: git, subcommand: push, require_any_flag: ['--delete'], target_protected_refs: ['main', 'master'] }
+        - { program: git, subcommand: update-ref, require_any_flag: ['-d'], target_token_glob: 'refs/heads/main' }
+        - { program: git, subcommand: update-ref, require_any_flag: ['-d'], target_token_glob: 'refs/heads/master' }
+    reason: 'Deletion of a protected ref (main/master/release/*) — irreversible without admin recovery.'
+    _rationale: |
+      Mirrors DC-33 protected-ref allowlist. `git push origin :feature-x` and
+      `git push origin --delete feature-x` for non-protected refs remain
+      allowed (covered by DC-33 "branches" cleanup workflow in CLAUDE.md).
+
+  - id: DC-37
+    description: 'Reflog destruction.'
+    severity: block
+    warn_severity: warn
+    category: git_reflog_destroy
+    argv_match:
+      any_of:
+        - { program: git, subcommand: reflog, require_subverb: 'expire', require_all_flags: ['--expire=now', '--all'] }
+        - { program: git, subcommand: reflog, require_subverb: 'delete' }
+        - { program: git, subcommand: gc, require_any_flag: ['--prune=now'], require_any_flag_alt: ['--aggressive'], severity_override: 'warn' }
+    reason: 'Reflog destruction or aggressive gc removes recovery history (reflog / gc --prune=now --aggressive).'
+    _rationale: |
+      `git gc --prune=now --aggressive` is legitimate maintenance but worth
+      surfacing (warn). `git gc --auto` (implicit) is always allowed. The
+      reflog itself is the last-resort recovery surface; expire/delete is a
+      hard block.
+
+  - id: DC-38
+    description: 'Submodule deinit with --force.'
+    severity: block
+    category: git_submodule_force
+    argv_match:
+      program: git
+      subcommand: submodule
+      require_subverb: deinit
+      require_any_flag: ['--force', '-f']
+    reason: 'git submodule deinit --force discards uncommitted submodule work.'
+    _rationale: |
+      `git submodule deinit <path>` (no --force) is allowed. CLAUDE.md
+      "Submodules" notes that submodule work must be committed before
+      parent-repo updates; --force bypasses that protection.
+
+  - id: DC-39
+    description: 'git gc --prune=now without env override.'
+    severity: block
+    category: git_gc_prune_now
+    env_override: EVOKORE_ALLOW_GC_PRUNE
+    argv_match:
+      program: git
+      subcommand: gc
+      require_any_flag: ['--prune=now']
+    reason: 'git gc --prune=now removes unreachable refs immediately. Set EVOKORE_ALLOW_GC_PRUNE=true to override.'
+    _rationale: |
+      `git gc --auto` (implicit maintenance) is always allowed. Explicit
+      `--prune=now` is rare-but-legitimate maintenance and gated behind an
+      env override so the operator records intent.
+
+  - id: DC-41
+    description: 'gh issue create — autonomous GitHub issue filing requires explicit env opt-in.'
+    severity: block
+    category: gh_auto_file_issue
+    env_override: EVOKORE_AUTO_FILE_ISSUES
+    argv_match:
+      program: gh
+      subcommand: issue
+      require_subverb: create
+    reason: 'gh issue create blocked by default — set EVOKORE_AUTO_FILE_ISSUES=true to allow autonomous issue filing.'
+    _rationale: |
+      End-User panel: skill auto-chains (to-prd → to-issues → triage-bug)
+      could file GitHub issues autonomously. Default-deny preserves operator
+      intent. `gh issue list`, `gh issue view <n>`, `gh issue comment <n>`
+      remain allowed.
+
+  - id: DC-42
+    description: 'gh pr create from an agent worktree without explicit env opt-in.'
+    severity: block
+    category: gh_auto_file_pr
+    env_override: EVOKORE_AUTO_FILE_PRS
+    argv_match:
+      program: gh
+      subcommand: pr
+      require_subverb: create
+      cwd_match_glob: ['*/.claude/worktrees/*']
+    reason: 'gh pr create from a worktree requires EVOKORE_AUTO_FILE_PRS=true. Run from the repo root or set the env override.'
+    _rationale: |
+      `gh pr create --body-file -` from the repo root remains allowed
+      (CLAUDE.md "PR Template" workflow). Only worktree-context PR creation
+      is gated, since panel-of-experts agents and overnight runs spawn
+      throwaway worktrees that should not autonomously file PRs.
+
+  - id: DC-43
+    description: 'gh issue edit / pr edit --add-label for sensitive labels.'
+    severity: block
+    category: gh_auto_label_issue
+    env_override: EVOKORE_AUTO_LABEL_ISSUES
+    argv_match:
+      any_of:
+        - { program: gh, subcommand: issue, require_subverb: edit, require_flag_with_value: { flag: '--add-label', sensitive_values: ['security', 'release', 'ready-for-agent'] } }
+        - { program: gh, subcommand: pr,    require_subverb: edit, require_flag_with_value: { flag: '--add-label', sensitive_values: ['security', 'release', 'ready-for-agent'] } }
+    reason: 'gh issue/pr edit --add-label blocked for sensitive labels (security/release/ready-for-agent). Set EVOKORE_AUTO_LABEL_ISSUES=true to override.'
+    _rationale: |
+      Protects the upcoming `github-triage` label state machine. Labelling
+      with `security`, `release`, or `ready-for-agent` triggers downstream
+      automation; default-deny ensures operator confirms.
+
+  - id: DC-40
+    description: 'DC-03 short-flag tightening (alias rule for documentation).'
+    severity: warn
+    category: git_force_push_short_flag
+    pattern_alias_of: DC-03
+    reason: 'See DC-03 — tightened in W0g to also catch `-f` short flag and `--force-with-lease`.'
+    _rationale: |
+      DC-40 documents the W0g tightening of DC-03. The actual matching is
+      performed by DC-03's regex; this entry exists so the rule ID space
+      DC-33..DC-43 is contiguous and explicit. No standalone matcher logic
+      runs for DC-40 — it is a documentation marker.
+    inert: true
+
+zero_access_paths:
+  - '.env'
+  - '.env.local'
+  - '.env.production'
+  - '.ssh/'
+  - 'credentials.json'
+  - 'id_rsa'
+  - 'id_ed25519'
+  - '.gnupg/'
+  - '.aws/credentials'
+  - 'secrets.yaml'
+  - 'secrets.json'
+  - '.env.staging'
+  - '.env.development'
+  - '.env.test'
+  - '.npmrc'
+  - '.pypirc'
+  - '.netrc'
+  - '.docker/config.json'
+  - '.kube/config'
+  - '.gcloud/'
+  - '.azure/'
+  - 'token.json'
+  - 'auth.json'
+
+read_only_paths:
+  - 'node_modules/'
+  - 'dist/'
+  - '.git/'
+  - 'package-lock.json'
+  - 'yarn.lock'
+  - 'pnpm-lock.yaml'
+  - 'bun.lockb'
+
+no_delete_paths:
+  - 'permissions.yml'
+  - 'mcp.config.json'
+  - 'CLAUDE.md'
+  - 'package.json'
+  - 'tsconfig.json'
+  - 'damage-control-rules.yaml'
+  - '.claude/settings.json'
+  - '.github/'
+  - '.gitignore'
+  - '.gitmodules'
+  - 'README.md'
+  - 'LICENSE'
+  - 'SOUL.md'
+  - 'RULES.md'
+
+# Prompt injection detection patterns (AGT-014 Security Sentinel)
+output_patterns:
+  - id: prompt_injection_ignore
+    pattern: "ignore (previous|prior|all) instructions?"
+    action: block
+    reason: "Prompt injection: attempt to override system instructions"
+  - id: prompt_injection_new_prompt
+    pattern: "new system prompt:"
+    action: block
+    reason: "Prompt injection: inline system prompt injection"
+  - id: prompt_injection_override
+    pattern: "override your (instructions|training|guidelines)"
+    action: block
+    reason: "Prompt injection: explicit override attempt"
+  - id: prompt_injection_you_are_now
+    pattern: "you are now (a |an )?(different|new|unrestricted)"
+    action: block
+    reason: "Prompt injection: identity override"
+  - id: prompt_injection_forget
+    pattern: "forget (your training|all previous|everything)"
+    action: block
+    reason: "Prompt injection: training erasure attempt"

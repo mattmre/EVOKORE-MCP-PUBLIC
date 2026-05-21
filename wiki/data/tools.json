@@ -1,0 +1,301 @@
+{
+  "tools": [
+    {
+      "name": "docs_architect",
+      "manager": "SkillManager",
+      "purpose": "Execute a Gold Standard documentation overhaul by reading project files and returning a comprehensive generation prompt.",
+      "title": "Documentation Architect",
+      "readOnly": false,
+      "destructive": false
+    },
+    {
+      "name": "skill_creator",
+      "manager": "SkillManager",
+      "purpose": "Generate skill scaffolding, directories, and a SKILL.md template for a new skill.",
+      "title": "Skill Creator",
+      "readOnly": false,
+      "destructive": false
+    },
+    {
+      "name": "resolve_workflow",
+      "manager": "SkillManager",
+      "purpose": "Run a semantic search over agent skills and inject the top 1-3 matches plus prompts and guidelines into the response.",
+      "title": "Resolve Workflow",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "search_skills",
+      "manager": "SkillManager",
+      "purpose": "Search the EVOKORE-MCP skill library by keyword across names, descriptions, tags, and categories.",
+      "title": "Search Skills",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "get_skill_help",
+      "manager": "SkillManager",
+      "purpose": "Retrieve full documentation, internal instructions, and intended use-cases for a specific skill.",
+      "title": "Get Skill Help",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "discover_tools",
+      "manager": "SkillManager",
+      "purpose": "Search and list tools available in the current session; in dynamic mode this activates matched tools for the session.",
+      "title": "Discover Tools",
+      "readOnly": false,
+      "destructive": false
+    },
+    {
+      "name": "proxy_server_status",
+      "manager": "SkillManager",
+      "purpose": "Inspect the aggregated child-server registry including server status, tool counts, and recent health metadata.",
+      "title": "Proxy Server Status",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "refresh_skills",
+      "manager": "SkillManager",
+      "purpose": "Rescan the SKILLS directory and refresh the in-memory skill index without restarting the server.",
+      "title": "Refresh Skills Index",
+      "readOnly": false,
+      "destructive": false
+    },
+    {
+      "name": "fetch_skill",
+      "manager": "SkillManager",
+      "purpose": "Download a skill from a remote URL into the local SKILLS directory with optional SHA-256 checksum verification.",
+      "title": "Fetch Remote Skill",
+      "readOnly": false,
+      "destructive": false
+    },
+    {
+      "name": "list_registry",
+      "manager": "SkillManager",
+      "purpose": "List skills available from configured remote registries defined in mcp.config.json under skillRegistries.",
+      "title": "List Registry Skills",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "execute_skill",
+      "manager": "SkillManager",
+      "purpose": "Execute code blocks from a skill in a sandboxed subprocess with output capture, timeout, and resource limits.",
+      "title": "Execute Skill Steps",
+      "readOnly": false,
+      "destructive": true
+    },
+    {
+      "name": "describe_tool",
+      "manager": "SkillManager",
+      "purpose": "Return full schemas for the requested tool names; the bootstrap path when EVOKORE_TOOL_SCHEMA_MODE=deferred strips schemas.",
+      "title": "Describe Tool",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "get_telemetry",
+      "manager": "TelemetryManager",
+      "purpose": "Return aggregate telemetry metrics (tool call counts, error rates, session counts, latency). Requires EVOKORE_TELEMETRY=true.",
+      "title": "Get Telemetry Metrics",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "reset_telemetry",
+      "manager": "TelemetryManager",
+      "purpose": "Reset all telemetry metrics to zero, clearing both the in-memory state and the persisted metrics file.",
+      "title": "Reset Telemetry Metrics",
+      "readOnly": false,
+      "destructive": true
+    },
+    {
+      "name": "reload_plugins",
+      "manager": "PluginManager",
+      "purpose": "Reload all plugins from the plugins directory and pick up tool changes during a live session.",
+      "title": "Reload Plugins",
+      "readOnly": false,
+      "destructive": false
+    },
+    {
+      "name": "nav_get_map",
+      "manager": "NavigationAnchorManager",
+      "purpose": "Scan a file for @AI:NAV anchors and return a structural map (sections, insert points, warnings) without returning file content.",
+      "title": "Get Navigation Anchor Map",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "nav_read_anchor",
+      "manager": "NavigationAnchorManager",
+      "purpose": "Read a bounded window of lines centered on a named @AI:NAV anchor without loading the full file.",
+      "title": "Read Navigation Anchor Window",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "session_context_health",
+      "manager": "SessionAnalyticsManager",
+      "purpose": "Report current session context pressure with cache-token counts, cost per turn, and whether /compact is recommended.",
+      "title": "Session Context Health",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "session_analyze_replay",
+      "manager": "SessionAnalyticsManager",
+      "purpose": "Analyze EVOKORE session replay JSONL files to produce tool frequency stats and detect retry signals.",
+      "title": "Analyze Session Replay",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "session_work_ratio",
+      "manager": "SessionAnalyticsManager",
+      "purpose": "Compute the ratio of non-empty evidence entries to total replay entries to flag retry storms and low-yield sessions.",
+      "title": "Session Work Ratio",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "session_trust_report",
+      "manager": "SessionAnalyticsManager",
+      "purpose": "Return per-agent trust scores, tiers, and multipliers for the current session.",
+      "title": "Session Trust Report",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "claim_acquire",
+      "manager": "ClaimsManager",
+      "purpose": "Acquire an exclusive resource claim for an agent (file, task, dataset) with a configurable TTL.",
+      "title": "Acquire Resource Claim",
+      "readOnly": false,
+      "destructive": false
+    },
+    {
+      "name": "claim_release",
+      "manager": "ClaimsManager",
+      "purpose": "Release a resource claim held by an agent. Idempotent and returns false if claim not found or not owned.",
+      "title": "Release Resource Claim",
+      "readOnly": false,
+      "destructive": false
+    },
+    {
+      "name": "claim_list",
+      "manager": "ClaimsManager",
+      "purpose": "List all active resource claims with staleness info (expired, processDead). Read-only.",
+      "title": "List Resource Claims",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "claim_sweep",
+      "manager": "ClaimsManager",
+      "purpose": "Sweep and remove expired or dead-process claims. Returns count of swept vs alive claims.",
+      "title": "Sweep Stale Claims",
+      "readOnly": false,
+      "destructive": true
+    },
+    {
+      "name": "memory_store",
+      "manager": "MemoryManager",
+      "purpose": "Store a value in agent memory keyed by session and key with optional tags; supports kind-based default TTL.",
+      "title": "Store Agent Memory",
+      "readOnly": false,
+      "destructive": false
+    },
+    {
+      "name": "memory_search",
+      "manager": "MemoryManager",
+      "purpose": "Search agent memory by key pattern, tags, or kind filter. Returns matching entries newest-first.",
+      "title": "Search Agent Memory",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "memory_list",
+      "manager": "MemoryManager",
+      "purpose": "List all active (non-expired) memory entries for a given session. Read-only.",
+      "title": "List Agent Memory",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "fleet_spawn",
+      "manager": "FleetManager",
+      "purpose": "Spawn a child process and register it in the fleet with an agentId; detaches into its own process group on POSIX.",
+      "title": "Spawn Fleet Agent",
+      "readOnly": false,
+      "destructive": false
+    },
+    {
+      "name": "fleet_claim",
+      "manager": "FleetManager",
+      "purpose": "Associate a running fleet agent with a resource name and mark the resource as claimed.",
+      "title": "Claim Fleet Resource",
+      "readOnly": false,
+      "destructive": false
+    },
+    {
+      "name": "fleet_release",
+      "manager": "FleetManager",
+      "purpose": "Kill a fleet agent's full process tree and mark it released. Uses taskkill on Windows and process-group SIGKILL on POSIX.",
+      "title": "Release Fleet Agent",
+      "readOnly": false,
+      "destructive": true
+    },
+    {
+      "name": "fleet_status",
+      "manager": "FleetManager",
+      "purpose": "Return the status and liveness of one fleet agent (when agentId is provided) or every registered agent.",
+      "title": "Fleet Status",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "orchestration_start",
+      "manager": "OrchestrationRuntime",
+      "purpose": "Start a multi-agent orchestrated run via FleetManager and ClaimsManager with sequential rollback on failure.",
+      "title": "Start Orchestrated Run",
+      "readOnly": false,
+      "destructive": false
+    },
+    {
+      "name": "orchestration_stop",
+      "manager": "OrchestrationRuntime",
+      "purpose": "Stop an orchestrated run, release every agent process tree, and free every held resource claim.",
+      "title": "Stop Orchestrated Run",
+      "readOnly": false,
+      "destructive": true
+    },
+    {
+      "name": "orchestration_status",
+      "manager": "OrchestrationRuntime",
+      "purpose": "Return status for one run (when runId provided) or all runs and trigger a liveness probe that can mark stalled runs degraded.",
+      "title": "Orchestration Status",
+      "readOnly": true,
+      "destructive": false
+    },
+    {
+      "name": "worker_dispatch",
+      "manager": "WorkerManager",
+      "purpose": "Dispatch a non-blocking background worker (test_run, repo_analysis, security_scan, benchmark); returns a workerId for polling.",
+      "title": "Dispatch Background Worker",
+      "readOnly": false,
+      "destructive": false
+    },
+    {
+      "name": "worker_context",
+      "manager": "WorkerManager",
+      "purpose": "Get the current status and results of a dispatched worker (pending, running, complete, error) plus persisted output.",
+      "title": "Get Worker Context",
+      "readOnly": true,
+      "destructive": false
+    }
+  ],
+  "generatedAt": "2026-05-21T02:31:09.873Z"
+}

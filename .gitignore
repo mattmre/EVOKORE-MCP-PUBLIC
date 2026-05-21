@@ -1,0 +1,64 @@
+.env
+.commit-msg.txt
+node_modules/
+.orchestrator/
+mcp-research-tmp/
+dist/
+
+# Generated API documentation (output of typedoc)
+docs/api/
+
+# Compiled TypeScript artifacts in src/ (output goes to dist/)
+src/**/*.js
+src/**/*.js.map
+src/**/*.d.ts
+src/**/*.d.ts.map
+
+# Build artifact: skill composition graph
+skill-graph.json
+
+# ============================================================================
+# Local env files
+# `.env.example` is the only `.env*` file that should be committed.
+# ============================================================================
+.env.local
+.env.*
+!.env.example
+
+# ============================================================================
+# Editor / IDE
+# ============================================================================
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ============================================================================
+# Test output / coverage
+# ============================================================================
+coverage/
+.nyc_output/
+*.log
+
+# ============================================================================
+# EVOKORE runtime artifacts (should never appear inside the repo; defensive)
+# ============================================================================
+orchestration-state/
+.evokore-cache/
+
+# ============================================================================
+# Claude Code agent worktrees — temporary, never commit.
+# ============================================================================
+.claude/worktrees/
+
+# ============================================================================
+# Brutal Honesty Kit (BHK v3.3) build artifacts.
+# ============================================================================
+# Python bytecode (BHS kit Python scripts under scripts/ and tests/)
+__pycache__/
+*.pyc
+
+# BHS kit JSON drift report artifact (regenerated on every validator run)
+tmp/v33-report.json

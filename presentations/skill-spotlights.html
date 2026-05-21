@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EVOKORE-MCP — Skill Spotlights</title>
+<meta name="description" content="A curated tour of 12 representative skills across EVOKORE's 16 active categories, each with an example invocation and best-for tag." />
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-dot" aria-hidden="true"></span>EVOKORE-MCP<small>presentations</small></a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html" data-nav="index.html">Home</a>
+      <a href="executive-summary.html" data-nav="executive-summary.html">Executive</a>
+      <a href="technical-analysis.html" data-nav="technical-analysis.html">Technical</a>
+      <a href="panel-of-experts.html" data-nav="panel-of-experts.html">Panel</a>
+      <a href="arch-aep-system.html" data-nav="arch-aep-system.html">AEP</a>
+      <a href="skill-spotlights.html" data-nav="skill-spotlights.html">Skills</a>
+      <a href="workflows.html" data-nav="workflows.html">Workflows</a>
+      <a class="repo" href="../README.md">Back to repo</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-intro">
+    <div class="kicker">Skill spotlights</div>
+    <h1>Twelve skills worth knowing about</h1>
+    <p>EVOKORE indexes 266 skills across 16 active categories. This page picks 12 representatives that show the range — code-heavy workflows, content workflows, planning skills, and meta-utilities. Every skill card includes one example invocation and a "best for" tag so you can scan to the ones that match the work you do.</p>
+  </section>
+
+  <section>
+    <h2>Reading the cards</h2>
+    <div class="grid">
+      <div class="card">
+        <span class="badge green">Code</span>
+        <h3>Code workflow</h3>
+        <p class="muted">Designed for repo work. Tends to touch git, run tests, produce PRs, and follow code conventions.</p>
+      </div>
+      <div class="card">
+        <span class="badge purple">Non-code</span>
+        <h3>Non-code workflow</h3>
+        <p class="muted">Designed for content, planning, research, or operations. May produce markdown, PRDs, briefings, decision logs.</p>
+      </div>
+      <div class="card">
+        <span class="badge slate">Both</span>
+        <h3>Both</h3>
+        <p class="muted">A meta-utility or planning skill that applies equally well to code and non-code work.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The twelve</h2>
+    <div class="grid-2">
+
+      <div class="card">
+        <span class="badge slate">Both</span>
+        <h3>resolve_workflow</h3>
+        <p class="muted"><strong>Category:</strong> Native tool (SkillManager)</p>
+        <p>One-sentence purpose: resolve a natural-language objective to the right skills, with reasoning attached.</p>
+        <p><strong>Example invocation:</strong></p>
+        <pre><code>I need to wrap this session and leave a
+clean handoff for tomorrow.</code></pre>
+        <p><strong>Best for:</strong> when you don't yet know which skill to invoke. Returns a ranked list with <code>Why matched:</code> explanations.</p>
+      </div>
+
+      <div class="card">
+        <span class="badge green">Code</span>
+        <h3>repo-ingestor</h3>
+        <p class="muted"><strong>Category:</strong> General Coding Workflows</p>
+        <p>One-sentence purpose: walk a repo end to end, summarize its shape, and produce a high-signal narrative so a downstream agent can act without re-reading every file.</p>
+        <p><strong>Example invocation:</strong></p>
+        <pre><code>Ingest the current repo and produce a
+shape summary I can hand to a refactor
+panel.</code></pre>
+        <p><strong>Best for:</strong> the first turn of any agent that needs grounded repo understanding. Followed by a panel review on the artifact.</p>
+      </div>
+
+      <div class="card">
+        <span class="badge green">Code</span>
+        <h3>improve-codebase-architecture</h3>
+        <p class="muted"><strong>Category:</strong> Architecture</p>
+        <p>One-sentence purpose: surface architectural friction inside a bounded context and turn shallow modules into deep ones, anchored on the ADR for the affected context.</p>
+        <p><strong>Example invocation:</strong></p>
+        <pre><code>Improve the session-isolation context.
+The HTTP transport state is leaking
+across connections.</code></pre>
+        <p><strong>Best for:</strong> module-scoped refactors. When 3+ viable interface shapes appear, escalates to the design-an-interface panel.</p>
+      </div>
+
+      <div class="card">
+        <span class="badge green">Code</span>
+        <h3>triage-bug</h3>
+        <p class="muted"><strong>Category:</strong> QA</p>
+        <p>One-sentence purpose: triage a bug from session evidence (replay log, evidence log, telemetry, repo audit) and produce a TDD fix plan plus a <code>docs/bugs/&lt;slug&gt;.md</code> artifact.</p>
+        <p><strong>Example invocation:</strong></p>
+        <pre><code>Triage the rate-limiter regression from
+last night's session. Produce a TDD plan
+and the docs/bugs file.</code></pre>
+        <p><strong>Best for:</strong> the first 10 minutes after a bug report. Builds the failing-test seed before any fix attempt.</p>
+      </div>
+
+      <div class="card">
+        <span class="badge green">Code</span>
+        <h3>tdd</h3>
+        <p class="muted"><strong>Category:</strong> Orchestration Framework / commands</p>
+        <p>One-sentence purpose: enforce the Red → Green → Refactor cycle with explicit red-commit-hash evidence in the verification log.</p>
+        <p><strong>Example invocation:</strong></p>
+        <pre><code>Apply tdd to the fix described in
+docs/bugs/rate-limiter-regression.md.</code></pre>
+        <p><strong>Best for:</strong> any bug fix that touches behavior. Refuses to advance without the red reference.</p>
+      </div>
+
+      <div class="card">
+        <span class="badge green">Code</span>
+        <h3>pr-manager</h3>
+        <p class="muted"><strong>Category:</strong> General Coding Workflows</p>
+        <p>One-sentence purpose: package a working branch into a PR with the metadata, template sections, and reviewer hints the repo expects.</p>
+        <p><strong>Example invocation:</strong></p>
+        <pre><code>Open a PR for the current branch using
+the project's PR template. Include the
+verification log link and the panel
+review SHA.</code></pre>
+        <p><strong>Best for:</strong> the last 5 minutes of a coding session. Catches stale placeholders before reviewers do.</p>
+      </div>
+
+      <div class="card">
+        <span class="badge purple">Non-code</span>
+        <h3>to-prd</h3>
+        <p class="muted"><strong>Category:</strong> Planning</p>
+        <p>One-sentence purpose: synthesize a PRD from prior session evidence and panel-review it before declaring it done.</p>
+        <p><strong>Example invocation:</strong></p>
+        <pre><code>Turn the last two weeks of
+session-replay JSONL into a PRD for the
+HTTP-transport hardening initiative.</code></pre>
+        <p><strong>Best for:</strong> when "we should write this down" surfaces a few weeks into iteration. Evidence-driven, not aspirational.</p>
+      </div>
+
+      <div class="card">
+        <span class="badge purple">Non-code</span>
+        <h3>to-issues</h3>
+        <p class="muted"><strong>Category:</strong> Planning</p>
+        <p>One-sentence purpose: decompose a PRD into AFK/HITL-tagged vertical-slice issues with acceptance criteria and panel-review notes attached.</p>
+        <p><strong>Example invocation:</strong></p>
+        <pre><code>Decompose docs/prd/http-hardening.md
+into issues. Use vertical slices; tag
+AFK candidates.</code></pre>
+        <p><strong>Best for:</strong> turning a clean PRD into a roadmap an agent fleet can actually pick up.</p>
+      </div>
+
+      <div class="card">
+        <span class="badge slate">Both</span>
+        <h3>panel-of-experts</h3>
+        <p class="muted"><strong>Category:</strong> Orchestration Framework</p>
+        <p>One-sentence purpose: assemble a virtual expert panel with defined personas, lenses, biases, and challenge prompts, then run the 10-step cycle to produce auditable findings.</p>
+        <p><strong>Example invocation:</strong></p>
+        <pre><code>Invoke the Code Refinement panel on
+src/SessionIsolation.ts. Full 10-step
+cycle at depth 3.</code></pre>
+        <p><strong>Best for:</strong> when a single AI opinion is not enough — high-stakes architecture, security, planning, or stakeholder communication.</p>
+      </div>
+
+      <div class="card">
+        <span class="badge slate">Both</span>
+        <h3>aep-framework</h3>
+        <p class="muted"><strong>Category:</strong> Orchestration Framework</p>
+        <p>One-sentence purpose: organize a remediation sweep into Align / Execute / Prove phases with severity-tiered closes and verification evidence per item.</p>
+        <p><strong>Example invocation:</strong></p>
+        <pre><code>Run an AEP cycle on this refinement
+report. Lock scope, then execute the
+Critical tier first.</code></pre>
+        <p><strong>Best for:</strong> end-of-phase sweeps and audit-grade roadmap closes.</p>
+      </div>
+
+      <div class="card">
+        <span class="badge purple">Non-code</span>
+        <h3>content-research-writer</h3>
+        <p class="muted"><strong>Category:</strong> Research and Content</p>
+        <p>One-sentence purpose: produce evidence-grounded long-form content by separating research, synthesis, and writing into distinct phases.</p>
+        <p><strong>Example invocation:</strong></p>
+        <pre><code>Write a deep-dive on MCP transport
+modes. Use the architecture docs in
+this repo as primary sources.</code></pre>
+        <p><strong>Best for:</strong> long-form posts, internal explainers, and conference talk drafts. Pairs well with the Documentation panel as a final gate.</p>
+      </div>
+
+      <div class="card">
+        <span class="badge purple">Non-code</span>
+        <h3>meeting-insights-analyzer</h3>
+        <p class="muted"><strong>Category:</strong> Research and Content</p>
+        <p>One-sentence purpose: extract decisions, owners, deadlines, and unresolved questions from meeting transcripts or research review notes.</p>
+        <p><strong>Example invocation:</strong></p>
+        <pre><code>Analyze the persisted panel review at
+docs/panel-reviews/2026-05-20/presentation-*.md
+and extract decisions and follow-ups.</code></pre>
+        <p><strong>Best for:</strong> closing the loop after a panel run, a research review, or a stakeholder meeting.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <h2>How to find the rest</h2>
+    <p>EVOKORE indexes 266 skills. The fastest way to find the right one for the work in front of you:</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Use natural language</h3>
+<pre><code>Resolve a workflow for triaging a
+production incident and producing a
+post-mortem ready for the SRE channel.</code></pre>
+        <p class="muted">EVOKORE runs <code>resolve_workflow</code>, ranks matches with reasoning, and injects the top 1–3 skills directly into the response.</p>
+      </div>
+      <div class="card">
+        <h3>Search by keyword</h3>
+<pre><code>Search the MCP for skills about
+PostgreSQL schema design.</code></pre>
+        <p class="muted">EVOKORE runs <code>search_skills</code> with a metadata-weighted fuzzy match across name, alias, tags, and frontmatter.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Categories at a glance</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Category</th><th>Count</th><th>Flavor</th></tr></thead>
+        <tbody>
+          <tr><td>ORCHESTRATION FRAMEWORK</td><td>41</td><td>The densest hand-curated category — panels, commands, AEP, workflow templates.</td></tr>
+          <tr><td>DEVELOPER TOOLS</td><td>23</td><td>Skill creator, MCP builder, document skills, reverse-engineering lane.</td></tr>
+          <tr><td>WSHOBSON PLUGINS</td><td>146</td><td>The deep reference library — backend, frontend, infra, security, data, ML.</td></tr>
+          <tr><td>GENERAL CODING WORKFLOWS</td><td>9</td><td>Day-to-day session workflows: pr-manager, repo-ingestor, session-wrap.</td></tr>
+          <tr><td>EVOKORE EXTENSIONS</td><td>9</td><td>Hooks, SPARC methodology, verification quality, agentic jujutsu.</td></tr>
+          <tr><td>HIVE FRAMEWORK</td><td>8</td><td>Goal-driven agent design and the meta-router for new agent projects.</td></tr>
+          <tr><td>AUTOMATION AND PRODUCTIVITY</td><td>7</td><td>Personal productivity from the Anthropic cookbook.</td></tr>
+          <tr><td>RESEARCH AND CONTENT</td><td>5</td><td>Content research writer, lead research, meeting insights.</td></tr>
+          <tr><td>Stitch Skills</td><td>7</td><td>The Stitch design pipeline for autonomous website builds.</td></tr>
+          <tr><td>ANTHROPIC COOKBOOK</td><td>4</td><td>Custom skills imported from the Anthropic Cookbook.</td></tr>
+          <tr><td>PLANNING</td><td>2</td><td>to-prd, to-issues.</td></tr>
+          <tr><td>COMMUNICATION</td><td>1</td><td>zoom-out — abstraction-layer navigation.</td></tr>
+          <tr><td>CONTEXT</td><td>1</td><td>ubiquitous-language — per-context glossary crystallization.</td></tr>
+          <tr><td>ARCHITECTURE</td><td>1</td><td>improve-codebase-architecture, ADR-anchored.</td></tr>
+          <tr><td>PROJECT MANAGEMENT</td><td>1</td><td>github-triage state machine.</td></tr>
+          <tr><td>QA</td><td>1</td><td>triage-bug evidence-driven fix planner.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted" style="font-size:13px">Counts reflect the active SKILL.md files. The full per-skill reference lives in the wiki; the crib sheet at <code>docs/ALL_SKILLS_CRIB_SHEET.md</code> is the flat lookup table.</p>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>Last built: 2026-05-20</span>
+    <span><a href="../wiki/index.html">Skill wiki</a> &middot; <a href="../README.md">EVOKORE-MCP repo</a></span>
+  </div>
+</footer>
+
+<script src="assets/diagrams.js"></script>
+</body>
+</html>

@@ -1,0 +1,418 @@
+{
+  "$schema": "../../schemas/workflow.schema.json",
+  "name": "panel-review-generic",
+  "version": "1.2.0",
+  "description": "Generic panel review workflow: CONVENE → BRIEF → SOLO → CHALLENGE (1/3/5 rounds) → COUNCIL (depth ≥ 3) → CONCESSION (depth = 5) → CONVERGE → FEASIBILITY → DELIVER → PERSIST. Parameterized by panel type. Honors PANEL_OPERATING_INSTRUCTIONS.md (anti-compression contract).",
+  "triggers": {
+    "manual": true,
+    "on_event": ["panel-review-requested"]
+  },
+  "inputs": {
+    "panel_type": {
+      "type": "string",
+      "description": "Panel to convene: code-refinement, repo-ingestion, reverse-engineering, architecture-planning, security-audit, performance-optimization, developer-experience, testing-quality, documentation-quality, etc.",
+      "required": true
+    },
+    "artifact": {
+      "type": "string",
+      "description": "File path, code reference, or description of the artifact to review",
+      "required": true
+    },
+    "topic_slug": {
+      "type": "string",
+      "description": "Kebab-case slug used in the persisted filename (≤ 60 chars). Auto-derived from artifact if omitted.",
+      "default": ""
+    },
+    "context": {
+      "type": "string",
+      "description": "Additional context for the panel (constraints, concerns, background)",
+      "default": ""
+    },
+    "skip_challenge": {
+      "type": "boolean",
+      "description": "Skip the challenge phase entirely for quick reviews. When true, overrides challenge_depth and runs zero rounds.",
+      "default": false
+    },
+    "challenge_depth": {
+      "type": "integer",
+      "description": "Number of challenge rounds. Must be 1, 3, or 5. Depth ≥ 3 adds a council phase; depth = 5 adds a concession phase. See PANEL_OPERATING_INSTRUCTIONS.md § Challenge Depth Modes.",
+      "default": 1,
+      "enum": [1, 3, 5]
+    },
+    "skip_feasibility": {
+      "type": "boolean",
+      "description": "Skip the feasibility gate (not recommended for critical reviews)",
+      "default": false
+    },
+    "persist": {
+      "type": "boolean",
+      "description": "Persist the run to docs/panel-reviews/YYYY-MM-DD/{panel-type}-{topic-slug}-{shortid}.md and append to INDEX.md. Default: true. A run that is not persisted is a run that did not happen.",
+      "default": true
+    }
+  },
+  "outputs": {
+    "panel_report": {
+      "type": "object",
+      "description": "Complete panel review report with findings, convergence, and feasibility assessment"
+    },
+    "persisted_path": {
+      "type": "string",
+      "description": "Path to the persisted markdown file under docs/panel-reviews/, or empty if persistence was skipped"
+    }
+  },
+  "operating_instructions": {
+    "contract_path": "SKILLS/ORCHESTRATION FRAMEWORK/panel-of-experts/PANEL_OPERATING_INSTRUCTIONS.md",
+    "persona_authoring_guide_path": "SKILLS/ORCHESTRATION FRAMEWORK/panel-of-experts/PERSONA_AUTHORING_GUIDE.md",
+    "principles": [
+      "This is a token-burning workflow by design. Do not compress.",
+      "Dynamic Expert Generation — each expert generates 5–10 lens questions at runtime, specific to the artifact in front of them.",
+      "Loose persona anchor — direction, not script. The persona is the lens, not the subject. Pre-baked findings, standard questions, and verbatim phrasings are forbidden in persona definitions; see PERSONA_AUTHORING_GUIDE.md.",
+      "No situational binding to minor industry nuance — the artifact comes first.",
+      "Robust input is the deliverable — specificity, reasoning, consequence, trade-off."
+    ],
+    "anti_compression_target": {
+      "questions_per_expert": "5–10",
+      "words_per_answer": "200–500",
+      "min_total_words_per_expert": 800,
+      "min_acknowledged_strengths": 2
+    },
+    "challenge_depth_modes": {
+      "1": "Single challenge round. No council, no concession.",
+      "3": "Three challenge rounds + council phase.",
+      "5": "Five challenge rounds + council phase + concession phase."
+    }
+  },
+  "steps": [
+    {
+      "id": "convene",
+      "name": "Convene Panel",
+      "action": "invoke-agent",
+      "agent": "orchestrator",
+      "inputs": {
+        "panel_type": "{{ inputs.panel_type }}",
+        "artifact": "{{ inputs.artifact }}",
+        "instruction": "Select the appropriate experts from the panel roster based on the artifact type. Load the panel skill file, expert-roster.md, and PANEL_OPERATING_INSTRUCTIONS.md (the canonical anti-compression contract every expert MUST honor). Determine which experts are active for this review."
+      },
+      "outputs": {
+        "active_experts": "expert_list",
+        "panel_config": "config"
+      }
+    },
+    {
+      "id": "brief",
+      "name": "Brief the Panel",
+      "action": "invoke-agent",
+      "agent": "researcher",
+      "depends_on": ["convene"],
+      "inputs": {
+        "artifact": "{{ inputs.artifact }}",
+        "context": "{{ inputs.context }}",
+        "instruction": "Read and analyze the artifact under review. Prepare a structured briefing document following the panel's briefing template. Include: what is being reviewed, purpose, known concerns, constraints, relevant context, and a verbatim quote of the PANEL_OPERATING_INSTRUCTIONS contract so every expert reads it before writing."
+      },
+      "outputs": {
+        "briefing": "document"
+      }
+    },
+    {
+      "id": "solo-reviews",
+      "name": "Solo Expert Reviews",
+      "action": "parallel-group",
+      "depends_on": ["brief"],
+      "steps": [
+        {
+          "id": "expert-1-review",
+          "name": "Expert 1 Solo Review",
+          "action": "invoke-agent",
+          "agent": "reviewer",
+          "condition": "{{ active_experts | length > 0 }}",
+          "inputs": {
+            "expert_persona": "{{ convene.active_experts[0] }}",
+            "briefing": "{{ brief.document }}",
+            "artifact": "{{ inputs.artifact }}",
+            "operating_instructions_path": "SKILLS/ORCHESTRATION FRAMEWORK/panel-of-experts/PANEL_OPERATING_INSTRUCTIONS.md",
+            "instruction": "Adopt the persona as a LOOSE ANCHOR — direction, not script. Read the artifact end-to-end before writing. Then GENERATE YOUR OWN 5–10 lens questions at runtime, specific to this artifact and your specific posture. Do not reuse generic checklists. Answer each question fully (200–500 words minimum each, ≥ 800 words total). Tie every answer to specific lines, files, names, or claims in the artifact. Honor the Solo-Review Output Contract from PANEL_OPERATING_INSTRUCTIONS.md: Lens Questions → Answers → Critical Findings (with evidence + failure mode + fix) → Improvement Opportunities → ≥ 2 Acknowledged Strengths → Challenge to Other Panelists. Do not compress. If your output is under 800 words you have compressed — re-engage the artifact and try again."
+          },
+          "outputs": { "review": "findings" }
+        },
+        {
+          "id": "expert-2-review",
+          "name": "Expert 2 Solo Review",
+          "action": "invoke-agent",
+          "agent": "reviewer",
+          "condition": "{{ active_experts | length > 1 }}",
+          "inputs": {
+            "expert_persona": "{{ convene.active_experts[1] }}",
+            "briefing": "{{ brief.document }}",
+            "artifact": "{{ inputs.artifact }}",
+            "operating_instructions_path": "SKILLS/ORCHESTRATION FRAMEWORK/panel-of-experts/PANEL_OPERATING_INSTRUCTIONS.md",
+            "instruction": "Adopt the persona as a LOOSE ANCHOR — direction, not script. Read the artifact end-to-end before writing. Then GENERATE YOUR OWN 5–10 lens questions at runtime, specific to this artifact and your specific posture. Do not reuse generic checklists. Answer each question fully (200–500 words minimum each, ≥ 800 words total). Tie every answer to specific lines, files, names, or claims in the artifact. Honor the Solo-Review Output Contract from PANEL_OPERATING_INSTRUCTIONS.md. Do not compress."
+          },
+          "outputs": { "review": "findings" }
+        },
+        {
+          "id": "expert-3-review",
+          "name": "Expert 3 Solo Review",
+          "action": "invoke-agent",
+          "agent": "reviewer",
+          "condition": "{{ active_experts | length > 2 }}",
+          "inputs": {
+            "expert_persona": "{{ convene.active_experts[2] }}",
+            "briefing": "{{ brief.document }}",
+            "artifact": "{{ inputs.artifact }}",
+            "operating_instructions_path": "SKILLS/ORCHESTRATION FRAMEWORK/panel-of-experts/PANEL_OPERATING_INSTRUCTIONS.md",
+            "instruction": "Adopt the persona as a LOOSE ANCHOR — direction, not script. Read the artifact end-to-end before writing. Then GENERATE YOUR OWN 5–10 lens questions at runtime, specific to this artifact and your specific posture. Do not reuse generic checklists. Answer each question fully (200–500 words minimum each, ≥ 800 words total). Tie every answer to specific lines, files, names, or claims in the artifact. Honor the Solo-Review Output Contract from PANEL_OPERATING_INSTRUCTIONS.md. Do not compress."
+          },
+          "outputs": { "review": "findings" }
+        },
+        {
+          "id": "expert-4-review",
+          "name": "Expert 4 Solo Review",
+          "action": "invoke-agent",
+          "agent": "reviewer",
+          "condition": "{{ active_experts | length > 3 }}",
+          "inputs": {
+            "expert_persona": "{{ convene.active_experts[3] }}",
+            "briefing": "{{ brief.document }}",
+            "artifact": "{{ inputs.artifact }}",
+            "operating_instructions_path": "SKILLS/ORCHESTRATION FRAMEWORK/panel-of-experts/PANEL_OPERATING_INSTRUCTIONS.md",
+            "instruction": "Adopt the persona as a LOOSE ANCHOR — direction, not script. Read the artifact end-to-end before writing. Then GENERATE YOUR OWN 5–10 lens questions at runtime, specific to this artifact and your specific posture. Do not reuse generic checklists. Answer each question fully (200–500 words minimum each, ≥ 800 words total). Tie every answer to specific lines, files, names, or claims in the artifact. Honor the Solo-Review Output Contract from PANEL_OPERATING_INSTRUCTIONS.md. Do not compress."
+          },
+          "outputs": { "review": "findings" }
+        },
+        {
+          "id": "expert-5-review",
+          "name": "Expert 5 Solo Review",
+          "action": "invoke-agent",
+          "agent": "reviewer",
+          "condition": "{{ active_experts | length > 4 }}",
+          "inputs": {
+            "expert_persona": "{{ convene.active_experts[4] }}",
+            "briefing": "{{ brief.document }}",
+            "artifact": "{{ inputs.artifact }}",
+            "operating_instructions_path": "SKILLS/ORCHESTRATION FRAMEWORK/panel-of-experts/PANEL_OPERATING_INSTRUCTIONS.md",
+            "instruction": "Adopt the persona as a LOOSE ANCHOR — direction, not script. Read the artifact end-to-end before writing. Then GENERATE YOUR OWN 5–10 lens questions at runtime, specific to this artifact and your specific posture. Do not reuse generic checklists. Answer each question fully (200–500 words minimum each, ≥ 800 words total). Tie every answer to specific lines, files, names, or claims in the artifact. Honor the Solo-Review Output Contract from PANEL_OPERATING_INSTRUCTIONS.md. Do not compress."
+          },
+          "outputs": { "review": "findings" }
+        },
+        {
+          "id": "expert-6-review",
+          "name": "Expert 6 Solo Review",
+          "action": "invoke-agent",
+          "agent": "reviewer",
+          "condition": "{{ active_experts | length > 5 }}",
+          "inputs": {
+            "expert_persona": "{{ convene.active_experts[5] }}",
+            "briefing": "{{ brief.document }}",
+            "artifact": "{{ inputs.artifact }}",
+            "operating_instructions_path": "SKILLS/ORCHESTRATION FRAMEWORK/panel-of-experts/PANEL_OPERATING_INSTRUCTIONS.md",
+            "instruction": "Adopt the persona as a LOOSE ANCHOR — direction, not script. Read the artifact end-to-end before writing. Then GENERATE YOUR OWN 5–10 lens questions at runtime, specific to this artifact and your specific posture. Do not reuse generic checklists. Answer each question fully (200–500 words minimum each, ≥ 800 words total). Tie every answer to specific lines, files, names, or claims in the artifact. Honor the Solo-Review Output Contract from PANEL_OPERATING_INSTRUCTIONS.md. Do not compress."
+          },
+          "outputs": { "review": "findings" }
+        }
+      ]
+    },
+    {
+      "id": "challenge-round-1",
+      "name": "Challenge Round 1",
+      "action": "invoke-agent",
+      "agent": "orchestrator",
+      "depends_on": ["solo-reviews"],
+      "condition": "{{ not inputs.skip_challenge and inputs.challenge_depth >= 1 }}",
+      "inputs": {
+        "round_number": 1,
+        "all_reviews": "{{ solo-reviews.*.review }}",
+        "panel_config": "{{ convene.panel_config }}",
+        "instruction": "Stage Round 1 cross-expert challenges. For each pair of experts with conflicting or complementary findings, generate a specific challenge. Each challenge must name both experts, cite their specific findings (line numbers / file paths / quoted claims), and demand reconciliation. The Devil's Advocate must argue against the emerging consensus. Disagreement is signal — do not converge prematurely. Honor the anti-compression contract: capture the full exchange, not a summary."
+      },
+      "outputs": { "round": "transcript" }
+    },
+    {
+      "id": "challenge-round-2",
+      "name": "Challenge Round 2 (depth ≥ 3)",
+      "action": "invoke-agent",
+      "agent": "orchestrator",
+      "depends_on": ["challenge-round-1"],
+      "condition": "{{ not inputs.skip_challenge and inputs.challenge_depth >= 3 }}",
+      "inputs": {
+        "round_number": 2,
+        "all_reviews": "{{ solo-reviews.*.review }}",
+        "prior_rounds": "[{{ challenge-round-1.transcript }}]",
+        "panel_config": "{{ convene.panel_config }}",
+        "instruction": "Round 2 — go deeper than Round 1. Surface positions that hardened or shifted. Bring in evidence that was glossed over. Force experts to name a specific failure mode they would now flag at higher severity, AND a finding from another expert they now down-weight. Capture the full exchange."
+      },
+      "outputs": { "round": "transcript" }
+    },
+    {
+      "id": "challenge-round-3",
+      "name": "Challenge Round 3 (depth ≥ 3)",
+      "action": "invoke-agent",
+      "agent": "orchestrator",
+      "depends_on": ["challenge-round-2"],
+      "condition": "{{ not inputs.skip_challenge and inputs.challenge_depth >= 3 }}",
+      "inputs": {
+        "round_number": 3,
+        "all_reviews": "{{ solo-reviews.*.review }}",
+        "prior_rounds": "[{{ challenge-round-1.transcript }}, {{ challenge-round-2.transcript }}]",
+        "panel_config": "{{ convene.panel_config }}",
+        "instruction": "Round 3 — close the easy disagreements but stay loud on the hard ones. Each expert now names: (a) the strongest finding they are willing to stake their reputation on; (b) the strongest counter from another expert that they now must account for. Capture the full exchange."
+      },
+      "outputs": { "round": "transcript" }
+    },
+    {
+      "id": "challenge-round-4",
+      "name": "Challenge Round 4 (depth = 5)",
+      "action": "invoke-agent",
+      "agent": "orchestrator",
+      "depends_on": ["challenge-round-3"],
+      "condition": "{{ not inputs.skip_challenge and inputs.challenge_depth >= 5 }}",
+      "inputs": {
+        "round_number": 4,
+        "all_reviews": "{{ solo-reviews.*.review }}",
+        "prior_rounds": "[{{ challenge-round-1.transcript }}, {{ challenge-round-2.transcript }}, {{ challenge-round-3.transcript }}]",
+        "panel_config": "{{ convene.panel_config }}",
+        "instruction": "Round 4 — terminal-stakes territory. The Devil's Advocate now argues the strongest case AGAINST the entire consensus arc, citing what would have to be true for the panel to be wrong. Other experts respond directly. Capture the full exchange."
+      },
+      "outputs": { "round": "transcript" }
+    },
+    {
+      "id": "challenge-round-5",
+      "name": "Challenge Round 5 (depth = 5)",
+      "action": "invoke-agent",
+      "agent": "orchestrator",
+      "depends_on": ["challenge-round-4"],
+      "condition": "{{ not inputs.skip_challenge and inputs.challenge_depth >= 5 }}",
+      "inputs": {
+        "round_number": 5,
+        "all_reviews": "{{ solo-reviews.*.review }}",
+        "prior_rounds": "[{{ challenge-round-1.transcript }}, {{ challenge-round-2.transcript }}, {{ challenge-round-3.transcript }}, {{ challenge-round-4.transcript }}]",
+        "panel_config": "{{ convene.panel_config }}",
+        "instruction": "Round 5 — final challenge round. Each expert names the single change to the artifact that would most change their verdict, and the single piece of new evidence that would most move them off their current position. Capture the full exchange."
+      },
+      "outputs": { "round": "transcript" }
+    },
+    {
+      "id": "council",
+      "name": "Council Phase (depth ≥ 3)",
+      "action": "invoke-agent",
+      "agent": "orchestrator",
+      "depends_on": ["challenge-round-3"],
+      "condition": "{{ not inputs.skip_challenge and inputs.challenge_depth >= 3 }}",
+      "inputs": {
+        "all_reviews": "{{ solo-reviews.*.review }}",
+        "prior_rounds": "[{{ challenge-round-1.transcript }}, {{ challenge-round-2.transcript }}, {{ challenge-round-3.transcript }}, {{ challenge-round-4.transcript | default(null) }}, {{ challenge-round-5.transcript | default(null) }}]",
+        "panel_config": "{{ convene.panel_config }}",
+        "instruction": "Convene the COUNCIL phase. The active experts now hold a moderated deliberation. Each expert names: (1) where they shifted position during the challenge rounds and the specific evidence that moved them; (2) where they did NOT shift and why; (3) the council-level decision they now recommend. The Devil's Advocate continues to argue against the emerging consensus until the council closes. Output a full council transcript — not a summary. Honor the anti-compression contract."
+      },
+      "outputs": { "council_transcript": "transcript" }
+    },
+    {
+      "id": "concession",
+      "name": "Concession Phase (depth = 5)",
+      "action": "invoke-agent",
+      "agent": "orchestrator",
+      "depends_on": ["council"],
+      "condition": "{{ not inputs.skip_challenge and inputs.challenge_depth >= 5 }}",
+      "inputs": {
+        "all_reviews": "{{ solo-reviews.*.review }}",
+        "council_transcript": "{{ council.transcript }}",
+        "panel_config": "{{ convene.panel_config }}",
+        "instruction": "Convene the CONCESSION phase. Each expert who shifted their position MUST explicitly name the finding they conceded and the evidence that moved them. Each expert who did NOT shift MUST record the strongest counter-argument they heard and explain why they still hold their position. This is the record downstream consumers read first when they review the panel run later — so be specific, name names, and own the call. No hedging. Honor the anti-compression contract: each concession or hold-line is at minimum a paragraph, not a one-liner."
+      },
+      "outputs": { "concession_transcript": "transcript" }
+    },
+    {
+      "id": "converge",
+      "name": "Convergence — Synthesize Findings",
+      "action": "invoke-agent",
+      "agent": "orchestrator",
+      "depends_on": ["solo-reviews"],
+      "inputs": {
+        "all_reviews": "{{ solo-reviews.*.review }}",
+        "challenge_rounds": "[{{ challenge-round-1.transcript | default(null) }}, {{ challenge-round-2.transcript | default(null) }}, {{ challenge-round-3.transcript | default(null) }}, {{ challenge-round-4.transcript | default(null) }}, {{ challenge-round-5.transcript | default(null) }}]",
+        "council_transcript": "{{ council.transcript | default(null) }}",
+        "concession_transcript": "{{ concession.transcript | default(null) }}",
+        "instruction": "Act as Synthesis Lead. De-duplicate findings. Priority stack-rank by impact × likelihood × effort × consensus. Capture dissenting opinions in full — do not collapse them. Incorporate every available challenge round, council deliberation, and concession transcript. Produce the convergence report: Critical, High, Medium findings with consensus levels (UNANIMOUS / MAJORITY / SPLIT / DISSENT), plus Dissenting Opinions, Acknowledged Strengths, and (when present) a Concession Ledger summarizing who shifted where. Honor PANEL_OPERATING_INSTRUCTIONS.md — robust input is the deliverable."
+      },
+      "outputs": {
+        "convergence_report": "report"
+      }
+    },
+    {
+      "id": "feasibility",
+      "name": "Feasibility Panel Gate",
+      "action": "invoke-agent",
+      "agent": "researcher",
+      "depends_on": ["converge"],
+      "condition": "{{ not inputs.skip_feasibility }}",
+      "inputs": {
+        "convergence_report": "{{ converge.report }}",
+        "instruction": "Convene the Feasibility Research Panel (Torres, Wright, Okonkwo, Svensson). Evaluate the top recommendations from the convergence report. For each: assess feasibility, estimate effort, identify alternatives, evaluate ROI, recommend spikes. Produce the Feasibility Panel Report with verdicts: FEASIBLE / FEASIBLE WITH MODIFICATIONS / NEEDS SPIKE / INFEASIBLE. Each verdict must include reasoning, evidence, and named trade-offs."
+      },
+      "outputs": {
+        "feasibility_report": "report"
+      }
+    },
+    {
+      "id": "deliver",
+      "name": "Deliver Final Panel Report",
+      "action": "transform",
+      "depends_on": ["feasibility"],
+      "inputs": {
+        "template": {
+          "panel_type": "{{ inputs.panel_type }}",
+          "artifact": "{{ inputs.artifact }}",
+          "topic_slug": "{{ inputs.topic_slug }}",
+          "context": "{{ inputs.context }}",
+          "challenge_depth": "{{ inputs.challenge_depth }}",
+          "active_experts": "{{ convene.active_experts }}",
+          "briefing": "{{ brief.document }}",
+          "solo_reviews": "{{ solo-reviews.*.review }}",
+          "challenges": "[{{ challenge-round-1.transcript | default(null) }}, {{ challenge-round-2.transcript | default(null) }}, {{ challenge-round-3.transcript | default(null) }}, {{ challenge-round-4.transcript | default(null) }}, {{ challenge-round-5.transcript | default(null) }}]",
+          "council": "{{ council.transcript | default(null) }}",
+          "concession": "{{ concession.transcript | default(null) }}",
+          "convergence": "{{ converge.report }}",
+          "feasibility": "{{ feasibility.report }}",
+          "run_metadata": {
+            "run_date_iso": "{{ now() }}",
+            "skip_challenge": "{{ inputs.skip_challenge }}",
+            "skip_feasibility": "{{ inputs.skip_feasibility }}",
+            "challenge_depth": "{{ inputs.challenge_depth }}",
+            "council_run": "{{ inputs.challenge_depth >= 3 and not inputs.skip_challenge }}",
+            "concession_run": "{{ inputs.challenge_depth >= 5 and not inputs.skip_challenge }}"
+          }
+        }
+      },
+      "outputs": {
+        "panel_report": "result"
+      }
+    },
+    {
+      "id": "persist",
+      "name": "Persist Panel Run to docs/panel-reviews/",
+      "action": "run-command",
+      "depends_on": ["deliver"],
+      "condition": "{{ inputs.persist }}",
+      "inputs": {
+        "panel_report": "{{ deliver.result }}"
+      },
+      "command": "node scripts/panel-persistence.js --report=- --panel-type=\"{{ inputs.panel_type }}\" --topic-slug=\"{{ inputs.topic_slug }}\" --artifact=\"{{ inputs.artifact }}\" --challenge-depth=\"{{ inputs.challenge_depth }}\"",
+      "outputs": {
+        "persisted_path": "stdout"
+      }
+    }
+  ],
+  "execution": {
+    "mode": "dependency-aware",
+    "parallel_limit": 6,
+    "continue_on_error": false,
+    "fail_fast": false,
+    "timeout_seconds": 600,
+    "dry_run": false
+  },
+  "metadata": {
+    "author": "evokore",
+    "created": "2026-03-30",
+    "updated": "2026-05-07",
+    "tags": ["panel-of-experts", "review", "multi-perspective", "quality", "anti-compression", "persistence", "depth-modes", "council", "concession"]
+  }
+}

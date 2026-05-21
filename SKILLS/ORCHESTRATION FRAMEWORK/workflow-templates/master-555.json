@@ -1,0 +1,312 @@
+{
+  "$schema": "../../schemas/workflow.schema.json",
+  "name": "master-workflow-555",
+  "version": "1.0.0",
+  "description": "Master 5/5/5 workflow: 5 phases (Plan, Explore, Implement, Verify, Handoff), 5 quality gates (one per phase), and 5 expert panels invoked at the critical decision points. Designed as the top-level template for any non-trivial coding task that needs disciplined orchestration without losing autonomous-loop continuity.",
+  "triggers": {
+    "manual": true,
+    "on_event": ["task-start"]
+  },
+  "inputs": {
+    "task_title": {
+      "type": "string",
+      "description": "Short imperative title for the task being orchestrated.",
+      "required": true
+    },
+    "task_brief": {
+      "type": "string",
+      "description": "Self-contained brief for the task: goal, constraints, definition of done.",
+      "required": true
+    },
+    "artifacts": {
+      "type": "array",
+      "description": "Initial known artifacts (file paths, URLs, references) relevant to the task.",
+      "default": []
+    },
+    "skip_panels": {
+      "type": "array",
+      "description": "Panel IDs to skip when running this workflow (e.g. for fast-track tasks).",
+      "default": []
+    },
+    "max_phase_seconds": {
+      "type": "number",
+      "description": "Per-phase timeout in seconds. Phases that exceed this fail the gate.",
+      "default": 1800
+    }
+  },
+  "outputs": {
+    "task_report": {
+      "type": "object",
+      "description": "End-to-end task report: phase results, gate outcomes, panel findings, final handoff."
+    }
+  },
+  "steps": [
+    {
+      "id": "phase-1-plan",
+      "name": "Phase 1 — Plan",
+      "action": "invoke-agent",
+      "agent": "Plan",
+      "inputs": {
+        "task_title": "{{ inputs.task_title }}",
+        "task_brief": "{{ inputs.task_brief }}",
+        "artifacts": "{{ inputs.artifacts }}",
+        "instruction": "Produce an implementation plan: goal, success criteria, step-by-step approach, files to touch, risks, and explicit non-goals. Identify any required panel reviews."
+      },
+      "outputs": {
+        "plan": "result"
+      },
+      "timeout_seconds": 1800
+    },
+    {
+      "id": "panel-1-architecture",
+      "name": "Panel 1 — Architecture Planning",
+      "action": "invoke-agent",
+      "agent": "orchestrator",
+      "depends_on": ["phase-1-plan"],
+      "condition": "{{ 'architecture' not in inputs.skip_panels }}",
+      "inputs": {
+        "panel_type": "architecture-planning",
+        "artifact": "{{ phase-1-plan.plan }}",
+        "context": "{{ inputs.task_brief }}",
+        "instruction": "Convene the architecture-planning panel using panel-review-generic. Return only the verdict and the top 3 concerns."
+      },
+      "outputs": {
+        "panel_report": "report"
+      }
+    },
+    {
+      "id": "gate-1-plan-approved",
+      "name": "Gate 1 — Plan Approved",
+      "action": "conditional",
+      "depends_on": ["phase-1-plan"],
+      "condition": "phase-1-plan.plan != null and (panel-1-architecture.report is none or panel-1-architecture.report.verdict != 'INFEASIBLE')",
+      "outputs": {
+        "approved": "condition_result"
+      }
+    },
+    {
+      "id": "phase-2-explore",
+      "name": "Phase 2 — Explore",
+      "action": "invoke-agent",
+      "agent": "researcher",
+      "depends_on": ["gate-1-plan-approved"],
+      "condition": "{{ gate-1-plan-approved.approved }}",
+      "inputs": {
+        "plan": "{{ phase-1-plan.plan }}",
+        "artifacts": "{{ inputs.artifacts }}",
+        "instruction": "Walk the codebase relevant to the plan. Identify existing patterns, dependencies, and prior decisions. Return a researcher's report keyed by file path."
+      },
+      "outputs": {
+        "exploration": "report"
+      },
+      "timeout_seconds": 1800
+    },
+    {
+      "id": "panel-2-feasibility",
+      "name": "Panel 2 — Feasibility Research",
+      "action": "invoke-agent",
+      "agent": "orchestrator",
+      "depends_on": ["phase-2-explore"],
+      "condition": "{{ 'feasibility' not in inputs.skip_panels }}",
+      "inputs": {
+        "panel_type": "feasibility-research",
+        "artifact": "{{ phase-2-explore.exploration }}",
+        "context": "{{ phase-1-plan.plan }}",
+        "instruction": "Convene the feasibility-research panel. Return verdict (FEASIBLE / FEASIBLE WITH MODIFICATIONS / NEEDS SPIKE / INFEASIBLE) and any required spikes."
+      },
+      "outputs": {
+        "panel_report": "report"
+      }
+    },
+    {
+      "id": "gate-2-explore-complete",
+      "name": "Gate 2 — Exploration Complete",
+      "action": "conditional",
+      "depends_on": ["phase-2-explore"],
+      "condition": "phase-2-explore.exploration != null and (panel-2-feasibility.report is none or panel-2-feasibility.report.verdict != 'INFEASIBLE')",
+      "outputs": {
+        "approved": "condition_result"
+      }
+    },
+    {
+      "id": "phase-3-implement",
+      "name": "Phase 3 — Implement",
+      "action": "invoke-agent",
+      "agent": "implementer",
+      "depends_on": ["gate-2-explore-complete"],
+      "condition": "{{ gate-2-explore-complete.approved }}",
+      "inputs": {
+        "plan": "{{ phase-1-plan.plan }}",
+        "exploration": "{{ phase-2-explore.exploration }}",
+        "instruction": "Apply the plan. Edit only files identified in the plan plus any necessary tests. Do not introduce new blocking surfaces. Return the change set as a list of {file, summary}."
+      },
+      "outputs": {
+        "changeset": "result"
+      },
+      "timeout_seconds": 1800
+    },
+    {
+      "id": "panel-3-code-refinement",
+      "name": "Panel 3 — Code Refinement",
+      "action": "invoke-agent",
+      "agent": "orchestrator",
+      "depends_on": ["phase-3-implement"],
+      "condition": "{{ 'code-refinement' not in inputs.skip_panels }}",
+      "inputs": {
+        "panel_type": "code-refinement",
+        "artifact": "{{ phase-3-implement.changeset }}",
+        "context": "{{ phase-1-plan.plan }}",
+        "instruction": "Convene the code-refinement panel. Surface only Critical and High findings."
+      },
+      "outputs": {
+        "panel_report": "report"
+      }
+    },
+    {
+      "id": "gate-3-implementation-complete",
+      "name": "Gate 3 — Implementation Complete",
+      "action": "conditional",
+      "depends_on": ["phase-3-implement"],
+      "condition": "phase-3-implement.changeset != null",
+      "outputs": {
+        "approved": "condition_result"
+      }
+    },
+    {
+      "id": "phase-4-verify",
+      "name": "Phase 4 — Verify",
+      "action": "invoke-agent",
+      "agent": "tester",
+      "depends_on": ["gate-3-implementation-complete"],
+      "condition": "{{ gate-3-implementation-complete.approved }}",
+      "inputs": {
+        "changeset": "{{ phase-3-implement.changeset }}",
+        "instruction": "Run the most relevant tests for the change set. Capture failures. Add or update tests where coverage is missing. Return {passed, failed, added}."
+      },
+      "outputs": {
+        "verification": "result"
+      },
+      "timeout_seconds": 1800
+    },
+    {
+      "id": "panel-4-testing-quality",
+      "name": "Panel 4 — Testing Quality",
+      "action": "invoke-agent",
+      "agent": "orchestrator",
+      "depends_on": ["phase-4-verify"],
+      "condition": "{{ 'testing-quality' not in inputs.skip_panels }}",
+      "inputs": {
+        "panel_type": "testing-quality",
+        "artifact": "{{ phase-4-verify.verification }}",
+        "context": "{{ phase-1-plan.plan }}",
+        "instruction": "Convene the testing-quality panel. Flag any coverage gaps that block sign-off."
+      },
+      "outputs": {
+        "panel_report": "report"
+      }
+    },
+    {
+      "id": "gate-4-tests-green",
+      "name": "Gate 4 — Tests Green",
+      "action": "conditional",
+      "depends_on": ["phase-4-verify"],
+      "condition": "phase-4-verify.verification.failed == 0",
+      "outputs": {
+        "approved": "condition_result"
+      }
+    },
+    {
+      "id": "phase-5-handoff",
+      "name": "Phase 5 — Handoff",
+      "action": "invoke-agent",
+      "agent": "documentation",
+      "depends_on": ["gate-4-tests-green"],
+      "condition": "{{ gate-4-tests-green.approved }}",
+      "inputs": {
+        "plan": "{{ phase-1-plan.plan }}",
+        "changeset": "{{ phase-3-implement.changeset }}",
+        "verification": "{{ phase-4-verify.verification }}",
+        "instruction": "Produce the handoff document: PR description with Description / Type of Change / Testing / Evidence sections, plus session-log update. Do not commit anything; just emit the markdown."
+      },
+      "outputs": {
+        "handoff": "document"
+      },
+      "timeout_seconds": 1800
+    },
+    {
+      "id": "panel-5-documentation-quality",
+      "name": "Panel 5 — Documentation Quality",
+      "action": "invoke-agent",
+      "agent": "orchestrator",
+      "depends_on": ["phase-5-handoff"],
+      "condition": "{{ 'documentation-quality' not in inputs.skip_panels }}",
+      "inputs": {
+        "panel_type": "documentation-quality",
+        "artifact": "{{ phase-5-handoff.handoff }}",
+        "context": "{{ phase-1-plan.plan }}",
+        "instruction": "Convene the documentation-quality panel. Reject if Critical findings remain."
+      },
+      "outputs": {
+        "panel_report": "report"
+      }
+    },
+    {
+      "id": "gate-5-handoff-ready",
+      "name": "Gate 5 — Handoff Ready",
+      "action": "conditional",
+      "depends_on": ["phase-5-handoff"],
+      "condition": "phase-5-handoff.handoff != null",
+      "outputs": {
+        "approved": "condition_result"
+      }
+    },
+    {
+      "id": "deliver",
+      "name": "Deliver Master Report",
+      "action": "transform",
+      "depends_on": ["gate-5-handoff-ready"],
+      "inputs": {
+        "template": {
+          "task_title": "{{ inputs.task_title }}",
+          "phases": {
+            "plan": "{{ phase-1-plan.plan }}",
+            "explore": "{{ phase-2-explore.exploration }}",
+            "implement": "{{ phase-3-implement.changeset }}",
+            "verify": "{{ phase-4-verify.verification }}",
+            "handoff": "{{ phase-5-handoff.handoff }}"
+          },
+          "panels": {
+            "architecture": "{{ panel-1-architecture.report }}",
+            "feasibility": "{{ panel-2-feasibility.report }}",
+            "code_refinement": "{{ panel-3-code-refinement.report }}",
+            "testing_quality": "{{ panel-4-testing-quality.report }}",
+            "documentation_quality": "{{ panel-5-documentation-quality.report }}"
+          },
+          "gates": {
+            "plan_approved": "{{ gate-1-plan-approved.approved }}",
+            "explore_complete": "{{ gate-2-explore-complete.approved }}",
+            "implementation_complete": "{{ gate-3-implementation-complete.approved }}",
+            "tests_green": "{{ gate-4-tests-green.approved }}",
+            "handoff_ready": "{{ gate-5-handoff-ready.approved }}"
+          }
+        }
+      },
+      "outputs": {
+        "task_report": "result"
+      }
+    }
+  ],
+  "execution": {
+    "mode": "dependency-aware",
+    "parallel_limit": 3,
+    "continue_on_error": false,
+    "fail_fast": false,
+    "timeout_seconds": 9000,
+    "dry_run": false
+  },
+  "metadata": {
+    "author": "evokore",
+    "created": "2026-05-07",
+    "tags": ["master", "orchestration", "5-5-5", "phases", "panels", "gates"]
+  }
+}

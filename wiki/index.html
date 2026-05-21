@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home · EVOKORE-MCP Wiki</title>
+<meta name="generator" content="EVOKORE-MCP wiki build">
+<meta name="description" content="Static reference wiki for EVOKORE-MCP skills, tools, and environment variables.">
+<meta name="evokore-source-base" content="">
+<link rel="stylesheet" href="./assets/wiki.css">
+</head>
+<body>
+<header class="site-header"><div class="container">
+<h1><a href="./index.html">EVOKORE-MCP Wiki</a></h1>
+<nav class="primary"><a href="./index.html" class="active">Home</a><a href="./skills-index.html" class="">Skills</a><a href="./categories.html" class="">Categories</a><a href="./tools.html" class="">Tools</a><a href="./env-vars.html" class="">Env Vars</a></nav>
+</div></header>
+<main>
+<!-- last built: 2026-05-21T02:31:09.873Z -->
+<h1 class="page-title">EVOKORE-MCP Wiki</h1><p class="page-lede">Deep reference for the EVOKORE-MCP project: every skill, native tool, and environment variable, indexed for offline browsing.</p><section class="overview-grid"><a class="overview-card" href="./skills-index.html"><h3>Skills</h3><p>Searchable index of every SKILL.md across the SKILLS/ tree, with category badges and adapter provenance.</p><span class="count">266 skills</span></a><a class="overview-card" href="./categories.html"><h3>Categories</h3><p>Browse skills by their top-level SKILLS/ directory. Each category has its own page.</p><span class="count">16 categories</span></a><a class="overview-card" href="./tools.html"><h3>Native tools</h3><p>The MCP tools EVOKORE exposes natively, grouped by manager class.</p><span class="count">37 tools</span></a><a class="overview-card" href="./env-vars.html"><h3>Environment variables</h3><p>Operator knobs for runtime behavior, parsed from .env.example.</p><span class="count">102 variables</span></a></section><section class="bhk-panel"><h2>Tips for first-time users</h2><ul><li>This wiki is generated. Re-run <code>npm run wiki:build</code> after pulling new skills or editing <code>.env.example</code>.</li><li>The skills index does not fetch live from <code>mcp.config.json</code> — it reflects the <code>SKILL.md</code> set at build time.</li><li>Some <code>SKILL.md</code> files are adapters of upstream submodules. They cite <code>upstream</code>, <code>upstream-sha</code>, and <code>upstream-path</code> in their frontmatter.</li><li>If your browser blocks <code>file://</code> fetches, run <code>python -m http.server</code> in <code>wiki/</code> and open <code>http://localhost:8000</code>.</li><li>Look at the <code>presentations/</code> directory (if present in your checkout) for visual walkthroughs; this wiki is the deep reference.</li></ul></section><section><h2>What is EVOKORE-MCP?</h2><p>EVOKORE-MCP is a multi-server MCP (Model Context Protocol) aggregator. It proxies child MCP servers, layers skill discovery on top, and adds session continuity, fleet orchestration, role-based access, and human-in-the-loop approval. See the project <code>README.md</code> for full setup.</p></section>
+</main>
+<footer class="site-footer"><div class="container">
+<span>EVOKORE-MCP · Static wiki. Last built: 2026-05-20.</span>
+<span>Source: <a href="../README.md">README</a></span>
+</div></footer>
+<script src="./assets/wiki.js"></script>
+</body>
+</html>
