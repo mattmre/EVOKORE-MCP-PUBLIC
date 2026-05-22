@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or Discussion
+    url: https://github.com/mattmre/EVOKORE-MCP-PUBLIC/discussions
+    about: Please ask usage questions in Discussions. The issue tracker is reserved for confirmed bugs and concrete feature requests.
+  - name: Security vulnerability (private)
+    url: https://github.com/mattmre/EVOKORE-MCP-PUBLIC/security/advisories/new
+    about: Report security vulnerabilities through GitHub's private vulnerability reporting. Do NOT open a public issue for security problems.

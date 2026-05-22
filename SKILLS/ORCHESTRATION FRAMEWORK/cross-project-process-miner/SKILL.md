@@ -119,7 +119,7 @@ project_exclude: []                # optional list of project slugs to exclude
 
 ### Step 1: Enumerate project slugs
 
-List every subdirectory of `~/.claude/projects/`. Each directory name is a project slug (often a path-encoded repo path, e.g. `D--GITHUB-EVOKORE-MCP`). Filter out any slug in `project_exclude`.
+List every subdirectory of `~/.claude/projects/`. Each directory name is a project slug (often a path-encoded repo path, e.g. `<encoded-repo-path>`). Filter out any slug in `project_exclude`.
 
 ### Step 2: Sample sessions per project
 

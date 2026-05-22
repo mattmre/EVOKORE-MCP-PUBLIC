@@ -1,0 +1,102 @@
+name: Feature request
+description: Propose a new feature, enhancement, or design change for EVOKORE-MCP.
+title: "[feature] "
+labels: ["enhancement", "needs-triage"]
+assignees: ["mattmre"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing an idea. Please describe **the problem** before
+        the solution — concrete user-facing problems are easier to evaluate
+        than "wouldn't it be cool if".
+
+        For **open-ended discussions** ("should EVOKORE support X philosophy?")
+        prefer [Discussions → Ideas](https://github.com/mattmre/EVOKORE-MCP-PUBLIC/discussions/categories/ideas)
+        over an issue.
+
+  - type: checkboxes
+    id: prereqs
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I have searched [existing issues](https://github.com/mattmre/EVOKORE-MCP-PUBLIC/issues?q=is%3Aissue) and this is not a duplicate.
+          required: true
+        - label: I have checked [Discussions](https://github.com/mattmre/EVOKORE-MCP-PUBLIC/discussions) for prior conversation on this topic.
+          required: true
+        - label: This proposal is for EVOKORE-MCP itself (not for an upstream child server, vendored skill pack, or third-party MCP client).
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: |
+        What problem are you trying to solve? Who runs into it? How often?
+        What does the current workaround look like (if any)?
+
+        Skip the solution for now — describe the pain point.
+      placeholder: |
+        When I do X with EVOKORE, Y happens. I expected Z. This forces me to
+        manually do W every time I ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: |
+        Describe the change you would like to see. Be as concrete as you
+        can — file paths, config keys, tool names, env vars, default
+        behavior, error messages.
+
+        If this would be a breaking change, say so explicitly.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: |
+        What other approaches did you consider? Why is your proposed
+        solution better? "I haven't considered any alternatives" is a
+        valid answer if true — but try to think of at least one.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Surface affected
+      description: Which part of EVOKORE would this touch?
+      multiple: true
+      options:
+        - Core aggregator (`src/index.ts`, `ProxyManager`, `SkillManager`)
+        - HTTP transport (`HttpServer`, `SessionIsolation`, `OAuthProvider`)
+        - Webhooks (`WebhookManager`)
+        - Plugins (`PluginManager`)
+        - Hooks (`scripts/hooks/*`)
+        - Skills (`SKILLS/`)
+        - Damage-control rules (`damage-control-rules.yaml`)
+        - Permissions / RBAC (`permissions.yml`)
+        - Voice sidecar (`VoiceSidecar.ts`)
+        - Session continuity (replay / evidence / tilldone / claims)
+        - Fleet / orchestration runtime
+        - Documentation (`docs/`, `README.md`, `wiki/`)
+        - CI / release tooling (`scripts/`, `.github/workflows/`)
+        - Configuration schema (`mcp.config.json`)
+        - Other (specify below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: |
+        Mockups, links to similar features in other tools, prior art,
+        related issues, willingness to contribute a PR, etc.
+    validations:
+      required: false

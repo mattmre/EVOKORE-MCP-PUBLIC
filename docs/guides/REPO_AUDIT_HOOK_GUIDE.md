@@ -50,7 +50,7 @@ Identifies local branches whose upstream is gone or that are already merged into
 
 ### 3. Control-Plane Drift
 
-Checks for uncommitted changes to handoff files like `CLAUDE.md`, `next-session.md`, `task_plan.md`, `findings.md`, `progress.md`, and files under `docs/session-logs/`.
+Checks for uncommitted changes to handoff files like `CLAUDE.md` and other operator-tracked control-plane documents.
 
 ```
 3 control-plane file(s) have local drift.
@@ -121,7 +121,7 @@ npm run repo:audit
 
 ```
 EVOKORE Repo State Audit
-Repo root: D:\GITHUB\EVOKORE-MCP
+Repo root: /path/to/repo
 Current branch: feat/my-feature (behind main 2, ahead 5)
 Worktrees: 3
 Open PRs: 2

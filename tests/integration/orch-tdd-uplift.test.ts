@@ -18,7 +18,7 @@ const REFS_DIR = path.join(ORCH_TDD_DIR, 'refs');
 const RULES_PATH = path.join(REPO_ROOT, 'damage-control-rules.yaml');
 const VALIDATOR = path.join(REPO_ROOT, 'scripts', 'validate-tdd-evidence.js');
 
-describe('Wave 4 orch-tdd uplift', () => {
+describe('orch-tdd uplift', () => {
   describe('SKILL.md', () => {
     let body: string;
     beforeAll(() => {

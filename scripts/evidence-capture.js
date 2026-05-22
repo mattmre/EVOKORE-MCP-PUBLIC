@@ -16,7 +16,7 @@ const { writeHookEvent, sanitizeId } = require('./hook-observability');
 const { pruneOldSessions } = require('./log-rotation');
 const { SESSIONS_DIR } = require('./session-continuity');
 
-// Phase 0-C: dual-write to append-only JSONL manifest. Require is wrapped so
+// Dual-write to append-only JSONL manifest. Require is wrapped so
 // a missing dist build fails open to legacy writeSessionState.
 let appendEvent = () => {};
 try {

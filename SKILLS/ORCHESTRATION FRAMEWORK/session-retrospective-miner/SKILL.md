@@ -44,7 +44,7 @@ This skill uses two MCP tools from EVOKORE-MCP that must be available:
 - `session_analyze_replay` — aggregates tool frequency, retry rates, and hook events across session replay logs
 - `session_work_ratio` — computes useful-work density (evidence entries / replay entries) per session
 
-Both tools were added in EVOKORE-MCP v3.1 (`feat/token-efficiency-tools`). Verify with `discover_tools` before running.
+Both tools were added in EVOKORE-MCP v3.1. Verify with `discover_tools` before running.
 
 ---
 

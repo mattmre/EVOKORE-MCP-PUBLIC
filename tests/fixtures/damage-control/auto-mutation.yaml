@@ -59,23 +59,23 @@ cases:
   - rule_id: DC-42
     command: 'gh pr create --title "feat: foo" --body "details"'
     expect: block
-    cwd: 'D:/GITHUB/EVOKORE-MCP/.claude/worktrees/agent-a20a94fdd3b568427'
+    cwd: '/repo/.claude/worktrees/agent-FAKE17HEX0000000'
     note: 'PR creation from a `.claude/worktrees/*` cwd is gated'
   - rule_id: DC-42
     command: 'gh pr create --title "feat: foo" --body-file body.md'
     expect: block
-    cwd: 'D:/GITHUB/EVOKORE-MCP/.claude/worktrees/agent-some-other-id'
+    cwd: '/repo/.claude/worktrees/agent-some-other-id'
     note: 'any agent worktree path matches the cwd glob'
   - rule_id: DC-42
     command: 'gh pr create --title "feat: foo" --body "details"'
     expect: allow
-    cwd: 'D:/GITHUB/EVOKORE-MCP/.claude/worktrees/agent-a20a94fdd3b568427'
+    cwd: '/repo/.claude/worktrees/agent-FAKE17HEX0000000'
     env: { EVOKORE_AUTO_FILE_PRS: 'true' }
     note: 'env override unlocks worktree-based PR creation'
   - rule_id: DC-42
     command: 'gh pr create --title "feat: foo" --body "details"'
     expect: allow
-    cwd: 'D:/GITHUB/EVOKORE-MCP'
+    cwd: '/repo'
     note: 'CLAUDE.md "PR Template" workflow — repo root remains allowed'
   - rule_id: DC-42
     command: 'gh pr create --body-file body.md'
@@ -85,16 +85,16 @@ cases:
   - rule_id: DC-42
     command: 'gh pr list'
     expect: allow
-    cwd: 'D:/GITHUB/EVOKORE-MCP/.claude/worktrees/agent-a20a94fdd3b568427'
+    cwd: '/repo/.claude/worktrees/agent-FAKE17HEX0000000'
     note: 'read-only ops never gated by DC-42 even from a worktree'
   - rule_id: DC-42
     command: 'gh pr view 105'
     expect: allow
-    cwd: 'D:/GITHUB/EVOKORE-MCP/.claude/worktrees/agent-a20a94fdd3b568427'
+    cwd: '/repo/.claude/worktrees/agent-FAKE17HEX0000000'
   - rule_id: DC-42
     command: 'gh pr checkout 105'
     expect: allow
-    cwd: 'D:/GITHUB/EVOKORE-MCP/.claude/worktrees/agent-a20a94fdd3b568427'
+    cwd: '/repo/.claude/worktrees/agent-FAKE17HEX0000000'
     note: 'pr checkout is not pr create'
 
   # ---- DC-43: gh issue/pr edit --add-label for sensitive labels -----------

@@ -315,23 +315,4 @@ describe('Session Reattachment (HTTP mode) ', () => {
     });
   });
 
-  // ==========================================================================
-  // 8. Session contract documentation exists
-  // ==========================================================================
-
-  describe('session contract documentation', () => {
-    it('session contract document exists', () => {
-      const docPath = path.join(ROOT, 'docs', 'research', 'session-contract-m1-2026-03-26.md');
-      expect(fs.existsSync(docPath)).toBe(true);
-    });
-
-    it('session contract covers lifecycle, persistence, TTL, and non-contract items', () => {
-      const docPath = path.join(ROOT, 'docs', 'research', 'session-contract-m1-2026-03-26.md');
-      const content = fs.readFileSync(docPath, 'utf8');
-      expect(content).toMatch(/lifecycle/i);
-      expect(content).toMatch(/persist/i);
-      expect(content).toMatch(/TTL/i);
-      expect(content).toMatch(/not part of/i);
-    });
-  });
 });

@@ -202,18 +202,4 @@ describe('Per-Session RBAC for HttpServer', () => {
     });
   });
 
-  // ---- Research documentation ----
-
-  describe('research documentation', () => {
-    it('per-session RBAC research doc exists', () => {
-      const docPath = path.join(ROOT, 'docs', 'research', 'rbac-httpserver-per-session-2026-03-15.md');
-      expect(fs.existsSync(docPath)).toBe(true);
-
-      const content = fs.readFileSync(docPath, 'utf8');
-      expect(content).toMatch(/Per-Session RBAC/i);
-      expect(content).toMatch(/effectiveRole/);
-      expect(content).toMatch(/Backward Compat/i);
-      expect(content).toMatch(/JWT Claim/i);
-    });
-  });
 });

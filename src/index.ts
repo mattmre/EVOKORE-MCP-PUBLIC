@@ -183,7 +183,7 @@ export class EvokoreMCPServer {
     // `tools/list_changed` coalescing window. Default 250 ms,
     // operator-tunable via EVOKORE_TOOLS_LIST_CHANGED_DEBOUNCE_MS, clamped
     // to [0, 5000] ms. 0 disables debounce (every trigger fires
-    // immediately, preserving pre-Wave-0 behavior bit-for-bit).
+    // immediately, preserving the pre-debounce behavior bit-for-bit).
     const debounceRaw = parseInt(
       process.env.EVOKORE_TOOLS_LIST_CHANGED_DEBOUNCE_MS || "",
       10
@@ -518,7 +518,7 @@ export class EvokoreMCPServer {
   /**
    * coalesce a `tools/list_changed` trigger into the active
    * debounce window. When `toolsListChangedDebounceMs <= 0`, the
-   * notification fires synchronously (current pre-Wave-0 behavior). For
+   * notification fires synchronously (the pre-debounce default). For
    * positive windows, the first trigger arms a one-shot timer; any
    * additional triggers within the window only set the pending flag and
    * the timer flush emits a single notification on expiry.

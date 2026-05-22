@@ -19,7 +19,7 @@ const {
   SESSIONS_DIR
 } = require('./session-continuity');
 
-// Phase 0-D: emit a `pre_compact` event on every PreCompact trigger. Legacy
+// Emit a `pre_compact` event on every PreCompact trigger. Legacy
 // writeSessionState remains because it persists `preCompactSnapshot`, a rich
 // structured payload not modeled on the manifest yet.
 let appendEvent = () => {};

@@ -62,3 +62,13 @@ __pycache__/
 
 # BHS kit JSON drift report artifact (regenerated on every validator run)
 tmp/v33-report.json
+
+# ============================================================================
+# Internal-only working materials (operator-private; never published).
+# ============================================================================
+internal/
+
+# ============================================================================
+# TypeScript incremental compilation cache.
+# ============================================================================
+*.tsbuildinfo

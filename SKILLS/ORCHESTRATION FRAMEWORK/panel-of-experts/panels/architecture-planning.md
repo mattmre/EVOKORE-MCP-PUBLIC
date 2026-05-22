@@ -190,11 +190,11 @@ Top recommendations and alternative approaches go to [Feasibility Panel](feasibi
 
 ### Phase Plan Review
 ```
-Run an Architecture & Planning Panel review on docs/ECC-INTEGRATION-PLAN.md.
+Run an Architecture & Planning Panel review on docs/<your-integration-plan>.md.
 
-This is a 9-phase integration plan for adopting features from the
-everything-claude-code repo into EVOKORE-MCP. Total estimated scope
-is 28-43 sessions across ~75-110 new files.
+This is a multi-phase integration plan for adopting features from an
+upstream reference repo. Provide your own total estimated scope (sessions,
+new files) when invoking the panel.
 
 Key concerns:
 - Is the phase sequencing optimal for value delivery?
@@ -207,12 +207,10 @@ Full panel, all experts. Include feasibility gate.
 
 ### Architecture Decision
 ```
-Run an Architecture Decision review for the proposed Continuous Learning
-v2 system (Phase 4 of ECC Integration Plan).
-
-The system extracts patterns from session evidence, evolves behavioral
-instincts with confidence scores, and injects evolved rules into session
-context via the purpose-gate hook.
+Run an Architecture Decision review for a proposed subsystem
+(e.g., a continuous-learning pipeline that extracts patterns from
+session evidence, evolves behavioral instincts with confidence scores,
+and injects evolved rules into session context via a session-startup hook).
 
 Key question: Is this architecture sound, or are we building a system
 that will drift in unpredictable ways?

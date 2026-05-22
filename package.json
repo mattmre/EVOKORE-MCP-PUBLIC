@@ -66,7 +66,7 @@
     "ai-tools"
   ],
   "author": "EVOKORE",
-  "license": "ISC",
+  "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.27.1",

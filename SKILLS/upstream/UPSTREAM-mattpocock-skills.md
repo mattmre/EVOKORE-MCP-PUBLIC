@@ -19,11 +19,12 @@ WORKFLOWS/`) and reference upstream content via the `upstream:` /
 - **Authoritative LICENSE file:** `SKILLS/upstream/mattpocock-skills/LICENSE`
 - **Repo-root attribution:** `NOTICE`
 
-## Adapted Subset (Wave 0a → downstream PRs)
+## Adapted Subset
 
 The following upstream skills are slated for ADAPT/ADOPT into EVOKORE-MCP
-adapter SKILL.md files. Wave 0a (this PR) only establishes provenance and the
-adapter-template scaffolding; the actual adapter ports land in subsequent PRs.
+adapter SKILL.md files. The initial vendoring only establishes provenance and
+the adapter-template scaffolding; the actual adapter ports land in subsequent
+PRs.
 
 1. `zoom-out`
 2. `ubiquitous-language`

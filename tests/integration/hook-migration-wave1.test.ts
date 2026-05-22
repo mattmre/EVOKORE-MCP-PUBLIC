@@ -1,5 +1,5 @@
 /**
- * Wave 1 Phase 0-C — Hook migration wave 1 (dual-write verification)
+ * Hook migration sprint 1 —Hook migration wave 1 (dual-write verification)
  *
  * Spawns each of the three migrated hook scripts as a child process against
  * an isolated HOME / EVOKORE_HOME, feeds a realistic stdin payload, and
@@ -91,7 +91,7 @@ function readState(sessionId: string): Record<string, unknown> | null {
   return JSON.parse(fs.readFileSync(p, 'utf8'));
 }
 
-// Phase 0-D: wave 1 hooks no longer dual-write the legacy `{sessionId}.json`
+// Sprint-2 cutover: wave-1 hooks no longer dual-write the legacy `{sessionId}.json`
 // snapshot. Readers fold the JSONL manifest instead; use this helper in
 // tests that previously relied on the legacy .json file.
 function readFoldedState(
@@ -156,7 +156,7 @@ afterAll(() => {
   }
 });
 
-describe('Wave 1 Phase 0-C — purpose-gate dual-write', () => {
+describe('Hook migration sprint 1 —purpose-gate dual-write', () => {
   it('writes session_initialized JSONL event + legacy JSON on first prompt', () => {
     const sessionId = 'sess-wave1-init';
     const result = runHook(PURPOSE_GATE_SCRIPT, {
@@ -189,7 +189,7 @@ describe('Wave 1 Phase 0-C — purpose-gate dual-write', () => {
       user_message: 'init'
     });
     // Second prompt supplies the purpose.
-    const purpose = 'implement Wave 1 Phase 0-C hook migration';
+    const purpose = 'implement hook migration sprint 1';
     const result = runHook(PURPOSE_GATE_SCRIPT, {
       session_id: sessionId,
       user_message: purpose
@@ -237,7 +237,7 @@ describe('Wave 1 Phase 0-C — purpose-gate dual-write', () => {
   });
 });
 
-describe('Wave 1 Phase 0-C — session-replay dual-write', () => {
+describe('Hook migration sprint 1 —session-replay dual-write', () => {
   it('writes tool_invoked JSONL event alongside legacy JSON', () => {
     const sessionId = 'sess-wave1-replay';
     const result = runHook(SESSION_REPLAY_SCRIPT, {
@@ -248,7 +248,7 @@ describe('Wave 1 Phase 0-C — session-replay dual-write', () => {
     });
     expect(result.status).toBe(0);
 
-    // Phase 0-D: manifest is canonical — legacy snapshot no longer written
+    // Sprint-2 cutover: manifest is canonical — legacy snapshot no longer written
     // by wave-1 hooks.
     const state = readFoldedState(sessionId);
     expect(state).not.toBeNull();
@@ -285,7 +285,7 @@ describe('Wave 1 Phase 0-C — session-replay dual-write', () => {
   });
 });
 
-describe('Wave 1 Phase 0-C — evidence-capture dual-write', () => {
+describe('Hook migration sprint 1 —evidence-capture dual-write', () => {
   it('writes evidence_captured JSONL event for a test-run Bash command', () => {
     const sessionId = 'sess-wave1-evidence-test';
     const result = runHook(EVIDENCE_CAPTURE_SCRIPT, {
@@ -345,14 +345,14 @@ describe('Wave 1 Phase 0-C — evidence-capture dual-write', () => {
   });
 });
 
-describe('Wave 1 Phase 0-C — structural guards', () => {
+describe('Hook migration sprint 1 —structural guards', () => {
   it('purpose-gate.js requires ../dist/SessionManifest.js and calls appendEvent', () => {
     const source = fs.readFileSync(PURPOSE_GATE_SCRIPT, 'utf8');
     expect(source).toContain("require('../dist/SessionManifest.js')");
     expect(source).toContain("type: 'session_initialized'");
     expect(source).toContain("type: 'purpose_recorded'");
     expect(source).toContain("type: 'purpose_reminder'");
-    // Phase 0-D: the dual writeSessionState call has been removed; the
+    // Sprint-2 cutover: the dual writeSessionState call has been removed; the
     // JSONL manifest is now the canonical write path.
     expect(source).not.toContain('writeSessionState(sessionId, {');
   });

@@ -6,7 +6,7 @@ const path = require('path');
 const { writeHookEvent, sanitizeId } = require('./hook-observability');
 const { SESSIONS_DIR } = require('./session-continuity');
 
-// Phase 0-D: appendEvent is the canonical write path. compactIfNeeded rolls
+// appendEvent is the canonical write path. compactIfNeeded rolls
 // the JSONL manifest into a `__snapshot__` line when it exceeds the threshold.
 // Require is wrapped so a missing dist build fails open without crashing.
 let appendEvent = () => {};
@@ -549,7 +549,7 @@ process.stdin.on('end', async () => {
           counter.lastBlockedAt = new Date().toISOString();
           writeBlocksCounter(sessionId, counter);
         }
-        // Compaction opportunity on every Stop boundary (Phase 0-D).
+        // Compaction opportunity on every Stop boundary.
         try { await compactIfNeeded(sessionId); } catch { /* best effort */ }
         process.stderr.write(`${C.ORANGE}Complete all tasks before ending the session, or run:${RESET}\n`);
         process.stderr.write(`${C.SLATE}  node scripts/tilldone.js --clear --session ${sessionId}${RESET}\n\n`);
@@ -625,7 +625,7 @@ process.stdin.on('end', async () => {
       }
     }
 
-    // Phase 0-D: compact the JSONL manifest on Stop boundary.
+    // Compact the JSONL manifest on Stop boundary.
     try { await compactIfNeeded(sessionId); } catch { /* best effort */ }
 
     process.exit(0);

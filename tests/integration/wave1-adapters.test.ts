@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 /**
- * Wave 1: adapter SKILL.md validation.
+ * Adapter SKILL.md validation.
  *
  * Verifies the two ported adapter skills (`zoom-out` and
  * `ubiquitous-language`) satisfy:
@@ -61,7 +61,7 @@ function extractField(frontmatter: string, field: string): string | null {
   return m ? m[1].trim() : null;
 }
 
-describe('Wave 1 adapter SKILL.md files', () => {
+describe('adapter SKILL.md files', () => {
   for (const adapter of ADAPTERS) {
     describe(adapter.label, () => {
       it(`exists at the expected path`, () => {

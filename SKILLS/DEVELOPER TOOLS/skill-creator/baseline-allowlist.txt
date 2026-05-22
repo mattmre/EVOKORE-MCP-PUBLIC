@@ -1,7 +1,7 @@
 # baseline-allowlist.txt
 #
 # These skills were grandfathered in when the trigger-explicit lint
-# (Wave 0b) shipped. New skills are NOT allowed to fail.
+# shipped. New skills are NOT allowed to fail.
 #
 # Deletion-only ratchet: paths can be REMOVED when fixed but not ADDED.
 # The vitest suite enforces that the line count never grows.

@@ -510,20 +510,4 @@ describe('OAuthProvider-HttpServer Middleware Wiring', () => {
     });
   });
 
-  // ---- Phase 5: Research documentation ----
-
-  describe('Phase 5: Research documentation', () => {
-    it('middleware research doc exists', () => {
-      const docPath = path.join(ROOT, 'docs', 'research', 'oauth-httpserver-middleware-2026-03-15.md');
-      expect(fs.existsSync(docPath)).toBe(true);
-
-      const content = fs.readFileSync(docPath, 'utf8');
-      expect(content).toMatch(/OAuthProvider/);
-      expect(content).toMatch(/HttpServer/);
-      expect(content).toMatch(/middleware/i);
-      expect(content).toMatch(/\/health/);
-      expect(content).toMatch(/session.*role/i);
-      expect(content).toMatch(/JWT/i);
-    });
-  });
 });

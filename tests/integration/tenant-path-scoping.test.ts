@@ -1,5 +1,5 @@
 /**
- * Tenant path scoping validation (Wave 1 Phase 1-B).
+ * Tenant path scoping validation.
  *
  * Verifies the EVOKORE_TENANT_SCOPING opt-in feature that namespaces session
  * artifacts under ~/.evokore/tenants/{tenantId}/sessions/ when enabled, while

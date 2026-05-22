@@ -260,18 +260,4 @@ describe('RBAC Session Gaps — G-01, G-02, G-03', () => {
     });
   });
 
-  // ---- Research documentation ----
-
-  describe('research documentation', () => {
-    it('rbac session gaps research doc exists and covers all three fixes', () => {
-      const docPath = path.join(ROOT, 'docs', 'research', 'rbac-session-gaps-2026-04-11.md');
-      expect(fs.existsSync(docPath)).toBe(true);
-
-      const content = fs.readFileSync(docPath, 'utf8');
-      expect(content).toMatch(/G-01/);
-      expect(content).toMatch(/G-02/);
-      expect(content).toMatch(/G-03/);
-      expect(content).toMatch(/setSessionRole/);
-    });
-  });
 });

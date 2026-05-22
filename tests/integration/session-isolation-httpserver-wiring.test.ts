@@ -379,19 +379,4 @@ describe('SessionIsolation-HttpServer Wiring', () => {
     });
   });
 
-  // ---- Phase 4: Research doc ----
-
-  describe('Phase 4: Research documentation', () => {
-    it('wiring research doc exists', () => {
-      const docPath = path.join(ROOT, 'docs', 'research', 'session-isolation-httpserver-wiring-2026-03-15.md');
-      expect(fs.existsSync(docPath)).toBe(true);
-
-      const content = fs.readFileSync(docPath, 'utf8');
-      expect(content).toMatch(/SessionIsolation/);
-      expect(content).toMatch(/HttpServer/);
-      expect(content).toMatch(/LRU Eviction/i);
-      expect(content).toMatch(/Cleanup Timer/i);
-      expect(content).toMatch(/Duplicate Tracking/i);
-    });
-  });
 });

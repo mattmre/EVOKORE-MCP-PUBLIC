@@ -63,7 +63,7 @@ function writeLastPurposeHash(sessionId, hash) {
   }
 }
 
-// Phase 0-C: dual-write to append-only JSONL manifest alongside the legacy
+// Dual-write to append-only JSONL manifest alongside the legacy
 // `{sessionId}.json` snapshot. The JSONL module never throws; the require
 // itself is wrapped so a missing or broken dist build still fails open and
 // leaves the legacy writer in place.
@@ -377,7 +377,7 @@ process.stdin.on('end', () => {
     const payload = JSON.parse(input);
     const sessionId = sanitizeId(payload.session_id);
     const userMessage = payload.user_message || payload.tool_input?.user_message || '';
-    // Phase 0-D: JSONL manifest is the canonical write path. readSessionState
+    // JSONL manifest is the canonical write path. readSessionState
     // now folds the manifest first, falling back to legacy .json so the
     // "has existing state" check works for both.
     const manifestExists = fs.existsSync(path.join(SESSIONS_DIR, `${sessionId}.jsonl`));

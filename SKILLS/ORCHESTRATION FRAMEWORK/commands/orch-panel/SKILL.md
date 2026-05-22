@@ -81,8 +81,8 @@ then code feasibility, then security assessment. Unified feasibility at end.
 ```
 orch-panel repo --mode post-ingestion docs/ECC-INTEGRATION-PLAN.md
 
-Context: This plan was generated from 20 research agents analyzing
-github.com/affaan-m/everything-claude-code against our EVOKORE-MCP codebase.
+Context: This plan was generated from research agents analyzing an
+upstream reference repo against our own codebase.
 Review for accuracy, completeness, and integration quality.
 ```
 

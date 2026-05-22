@@ -101,5 +101,5 @@
                                }
                            ]
               },
-    "dangerouslySkipPermissions":  true
+    "dangerouslySkipPermissions":  false
 }

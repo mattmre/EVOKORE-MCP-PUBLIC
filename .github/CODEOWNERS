@@ -1,0 +1,62 @@
+# EVOKORE-MCP CODEOWNERS
+#
+# Each line is a path pattern followed by one or more owners.
+# The LAST matching pattern wins for any given file.
+#
+# We deliberately do NOT use `* @mattmre` as a catch-all. A bare wildcard
+# pattern can mask intent, makes review noise harder to tune per-area, and
+# obscures the fact that some directories vendor upstream code that is not
+# truly "owned" by this repo's maintainer.
+#
+# Reference: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# --- Runtime source ---
+/src/                              @mattmre
+/scripts/                          @mattmre
+/scripts/hooks/                    @mattmre
+/plugins/                          @mattmre
+
+# --- Configuration and policy ---
+/mcp.config.json                   @mattmre
+/damage-control-rules.yaml         @mattmre
+/permissions.yml                   @mattmre
+/voices.json                       @mattmre
+/tsconfig.json                     @mattmre
+/vitest.config.ts                  @mattmre
+/typedoc.json                      @mattmre
+/package.json                      @mattmre
+/package-lock.json                 @mattmre
+/commitlint.config.js              @mattmre
+
+# --- Skills (curated by the maintainer; vendored upstreams pinned by SHA) ---
+/SKILLS/                           @mattmre
+
+# --- Tests ---
+/tests/                            @mattmre
+
+# --- Documentation ---
+/docs/                             @mattmre
+/wiki/                             @mattmre
+/presentations/                    @mattmre
+/README.md                         @mattmre
+/CONTRIBUTING.md                   @mattmre
+/CHANGELOG.md                      @mattmre
+/SOUL.md                           @mattmre
+/RULES.md                          @mattmre
+
+# --- Governance, licensing, citation (highest review bar) ---
+/LICENSE                           @mattmre
+/NOTICE                            @mattmre
+/THIRD_PARTY_LICENSES.md           @mattmre
+/CITATION.cff                      @mattmre
+/CODE_OF_CONDUCT.md                @mattmre
+/SECURITY.md                       @mattmre
+/SUPPORT.md                        @mattmre
+
+# --- GitHub configuration ---
+/.github/                          @mattmre
+/.github/CODEOWNERS                @mattmre
+/.github/FUNDING.yml               @mattmre
+/.github/ISSUE_TEMPLATE/           @mattmre
+/.github/PULL_REQUEST_TEMPLATE.md  @mattmre
+/.github/workflows/                @mattmre

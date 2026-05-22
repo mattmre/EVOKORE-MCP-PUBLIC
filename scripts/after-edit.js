@@ -18,7 +18,7 @@ const {
 } = require('./session-continuity');
 const { pruneOldSessions } = require('./log-rotation');
 
-// Phase 0-D: emit an `evidence_captured` event (type: edit-trace) onto the
+// Emit an `evidence_captured` event (type: edit-trace) onto the
 // append-only JSONL manifest alongside the legacy writeSessionState call.
 // Legacy writes remain because they persist `lastEditedFile`/`lastEditAt`,
 // which are not currently modeled in the manifest schema.

@@ -188,18 +188,4 @@ describe('Per-Session Rate Limiting for HttpServer', () => {
     });
   });
 
-  // ---- Phase 3: Research documentation ----
-
-  describe('research documentation', () => {
-    it('per-session rate limiting research doc exists', () => {
-      const docPath = path.join(ROOT, 'docs', 'research', 'rate-limiting-per-session-2026-03-15.md');
-      expect(fs.existsSync(docPath)).toBe(true);
-
-      const content = fs.readFileSync(docPath, 'utf8');
-      expect(content).toMatch(/Per-Session Rate Limiting/i);
-      expect(content).toMatch(/Dual-Bucket/i);
-      expect(content).toMatch(/Lazy/i);
-      expect(content).toMatch(/Backward Compat/i);
-    });
-  });
 });

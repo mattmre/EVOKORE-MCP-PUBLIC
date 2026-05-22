@@ -1,0 +1,75 @@
+name: Question
+description: Ask a usage question. (Discussions is usually a better fit — read below.)
+title: "[question] "
+labels: ["question", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Please use Discussions first
+
+        For most usage questions, **[Discussions](https://github.com/mattmre/EVOKORE-MCP-PUBLIC/discussions)
+        is the right place — not Issues.**
+
+        - **Q&A category:** how do I configure / use / debug something?
+        - **Ideas category:** open-ended brainstorming about future direction.
+        - **Show and tell:** what you built with EVOKORE.
+        - **General:** anything else.
+
+        Discussions:
+          - Are threaded, so the answer is easy to find later.
+          - Don't clutter the issue tracker, which is reserved for
+            confirmed bugs and concrete feature requests.
+          - Get answered by the community as well as the maintainer.
+
+        Use this issue template **only** if:
+
+        - You already tried Discussions and got no useful answer after a few
+          days, **or**
+        - You believe the answer to your question is itself a documentation
+          bug (the docs are wrong, missing, or contradict the code), **or**
+        - Discussions are not enabled for some reason (rare).
+
+  - type: checkboxes
+    id: prereqs
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I have searched [existing issues](https://github.com/mattmre/EVOKORE-MCP-PUBLIC/issues?q=is%3Aissue) and this is not a duplicate.
+          required: true
+        - label: I have searched [Discussions](https://github.com/mattmre/EVOKORE-MCP-PUBLIC/discussions) and no thread answered my question.
+          required: true
+        - label: I have read the [README](https://github.com/mattmre/EVOKORE-MCP-PUBLIC#readme), [docs/](https://github.com/mattmre/EVOKORE-MCP-PUBLIC/tree/main/docs), and [CONTRIBUTING.md](https://github.com/mattmre/EVOKORE-MCP-PUBLIC/blob/main/CONTRIBUTING.md).
+          required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: Be specific. "How do I X with Y in scenario Z?" is much better than "How does EVOKORE work?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: What you have already tried
+      description: |
+        Commands, config snippets, doc pages you read. This helps the
+        maintainer avoid suggesting things you already ruled out.
+
+        **Redact any secrets before pasting commands or config.**
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: |
+        OS, Node version, MCP client, EVOKORE version, child servers in
+        use, anything else that might matter.
+    validations:
+      required: true

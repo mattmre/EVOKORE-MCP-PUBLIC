@@ -1,0 +1,169 @@
+name: Bug report
+description: Report a reproducible bug in EVOKORE-MCP.
+title: "[bug] "
+labels: ["bug", "needs-triage"]
+assignees: ["mattmre"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report. Please fill in
+        every section — bugs without a clear reproduction or environment
+        are very hard to act on and are likely to be closed.
+
+        For **usage questions** ("how do I configure X?") use
+        [Discussions](https://github.com/mattmre/EVOKORE-MCP-PUBLIC/discussions)
+        instead of an issue.
+
+        For **security vulnerabilities** use
+        [private vulnerability reporting](https://github.com/mattmre/EVOKORE-MCP-PUBLIC/security/advisories/new)
+        — do NOT open a public issue.
+
+  - type: checkboxes
+    id: prereqs
+    attributes:
+      label: Pre-flight checks
+      description: Before filing, please confirm the following.
+      options:
+        - label: I have searched [existing issues](https://github.com/mattmre/EVOKORE-MCP-PUBLIC/issues?q=is%3Aissue) and this is not a duplicate.
+          required: true
+        - label: I have searched [Discussions](https://github.com/mattmre/EVOKORE-MCP-PUBLIC/discussions) and this is not a usage question.
+          required: true
+        - label: I can reproduce this on the latest published release.
+          required: true
+        - label: This is NOT a security vulnerability (which would go through the [private advisory channel](https://github.com/mattmre/EVOKORE-MCP-PUBLIC/security/advisories/new)).
+          required: true
+
+  - type: input
+    id: evokore_version
+    attributes:
+      label: EVOKORE-MCP version
+      description: Output of `node dist/index.js --version`, or the npm/release tag.
+      placeholder: "3.1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      multiple: false
+      options:
+        - Windows 11
+        - Windows 10
+        - macOS (Apple Silicon)
+        - macOS (Intel)
+        - Linux (Ubuntu / Debian)
+        - Linux (Fedora / RHEL)
+        - Linux (other)
+        - WSL2
+        - Other (specify in additional context)
+    validations:
+      required: true
+
+  - type: input
+    id: node_version
+    attributes:
+      label: Node.js version
+      description: Output of `node --version`.
+      placeholder: "v20.18.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mcp_client
+    attributes:
+      label: MCP client
+      description: Which MCP client did you reproduce this with?
+      multiple: false
+      options:
+        - Claude Code (CLI)
+        - Claude Desktop
+        - Cursor
+        - Cline
+        - Continue
+        - Gemini CLI
+        - Custom client / direct JSON-RPC
+        - Other (specify in additional context)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: transport
+    attributes:
+      label: Transport
+      description: How were you connected to EVOKORE?
+      multiple: false
+      options:
+        - stdio (default)
+        - HTTP (`--http`)
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: |
+        Numbered steps. The smaller and more deterministic the repro, the faster the fix.
+        Include the exact tool calls or commands if relevant.
+      placeholder: |
+        1. Start EVOKORE with `node dist/index.js`.
+        2. From Claude Code, run the `<tool>` tool with arguments `{ ... }`.
+        3. Observe the error in stderr / the tool response.
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you think would happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened? Include error messages verbatim.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and stack traces
+      description: |
+        Paste relevant log output. Include EVOKORE stderr, the JSON-RPC
+        error response if any, and `~/.evokore/logs/` excerpts if
+        relevant.
+
+        **Redact any secrets, tokens, or PII before pasting.**
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Relevant configuration
+      description: |
+        Paste relevant excerpts from `mcp.config.json`,
+        `damage-control-rules.yaml`, `.claude/settings.json`, or env vars
+        you have set (e.g. `EVOKORE_*`).
+
+        **Redact API keys, tokens, and other secrets.**
+      render: json
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Workarounds you have tried, related issues, screenshots, anything else.
+    validations:
+      required: false

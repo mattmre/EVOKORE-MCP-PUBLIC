@@ -1,0 +1,9 @@
+# GitHub Sponsors funding configuration
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+#
+# Only the GitHub Sponsors button is enabled. Additional platforms
+# (Patreon, Open Collective, Ko-fi, Liberapay, Tidelift, etc.) are
+# intentionally omitted because no verified account on those platforms
+# is associated with this maintainer at the time of authoring.
+
+github: [mattmre]

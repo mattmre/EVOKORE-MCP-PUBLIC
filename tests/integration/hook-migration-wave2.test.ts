@@ -1,5 +1,5 @@
 /**
- * Wave 1 Phase 0-D — Hook migration wave 2 (final cut-over to JSONL manifest)
+ * Hook migration sprint 2 —Hook migration wave 2 (final cut-over to JSONL manifest)
  *
  * Spawns each migrated wave-2 hook/CLI script against an isolated HOME /
  * EVOKORE_HOME and verifies:
@@ -124,7 +124,7 @@ afterAll(() => {
   }
 });
 
-describe('Wave 1 Phase 0-D — tilldone CLI task_action events', () => {
+describe('Hook migration sprint 2 —tilldone CLI task_action events', () => {
   it('emits task_action for --add', () => {
     const sessionId = 'sess-wave2-add';
     const result = runCli(TILLDONE_SCRIPT, [
@@ -196,7 +196,7 @@ describe('Wave 1 Phase 0-D — tilldone CLI task_action events', () => {
   });
 });
 
-describe('Wave 1 Phase 0-D — tilldone Stop hook stop_check events', () => {
+describe('Hook migration sprint 2 —tilldone Stop hook stop_check events', () => {
   it('emits stop_check result=clear when no tasks are open and exits 0', () => {
     const sessionId = 'sess-wave2-stop-clear';
     const result = runHook(TILLDONE_SCRIPT, { session_id: sessionId });
@@ -278,7 +278,7 @@ describe('Wave 1 Phase 0-D — tilldone Stop hook stop_check events', () => {
   });
 });
 
-describe('Wave 1 Phase 0-D — after-edit evidence_captured:edit-trace', () => {
+describe('Hook migration sprint 2 —after-edit evidence_captured:edit-trace', () => {
   it('emits evidence_captured with evidence_type edit-trace for Edit tool', () => {
     const sessionId = 'sess-wave2-edit';
     const result = runHook(AFTER_EDIT_SCRIPT, {
@@ -317,7 +317,7 @@ describe('Wave 1 Phase 0-D — after-edit evidence_captured:edit-trace', () => {
   });
 });
 
-describe('Wave 1 Phase 0-D — subagent-tracker subagent_tracked events', () => {
+describe('Hook migration sprint 2 —subagent-tracker subagent_tracked events', () => {
   it('emits subagent_tracked for a Task invocation', () => {
     const sessionId = 'sess-wave2-subagent';
     const result = runHook(SUBAGENT_TRACKER_SCRIPT, {
@@ -356,7 +356,7 @@ describe('Wave 1 Phase 0-D — subagent-tracker subagent_tracked events', () => 
   });
 });
 
-describe('Wave 1 Phase 0-D — pre-compact pre_compact events', () => {
+describe('Hook migration sprint 2 —pre-compact pre_compact events', () => {
   it('emits a pre_compact event with trigger + counts', () => {
     const sessionId = 'sess-wave2-precompact';
     const result = runHook(PRE_COMPACT_SCRIPT, {
@@ -376,7 +376,7 @@ describe('Wave 1 Phase 0-D — pre-compact pre_compact events', () => {
   });
 });
 
-describe('Wave 1 Phase 0-D — wave-1 hook cleanup', () => {
+describe('Hook migration sprint 2 —wave-1 hook cleanup', () => {
   it('purpose-gate.js no longer calls writeSessionState', () => {
     const source = fs.readFileSync(PURPOSE_GATE_SCRIPT, 'utf8');
     expect(source).not.toContain('writeSessionState(sessionId, {');
@@ -393,7 +393,7 @@ describe('Wave 1 Phase 0-D — wave-1 hook cleanup', () => {
   });
 });
 
-describe('Wave 1 Phase 0-D — end-to-end round-trip via readManifest', () => {
+describe('Hook migration sprint 2 —end-to-end round-trip via readManifest', () => {
   it('folds a wave1 + wave2 hook sequence into the expected state', async () => {
     const sessionId = 'sess-wave2-roundtrip';
 

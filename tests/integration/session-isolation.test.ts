@@ -403,17 +403,4 @@ describe('T30: Multi-Tenant Session Isolation', () => {
     });
   });
 
-  // ---- Research doc exists ----
-
-  describe('research documentation', () => {
-    it('multi-tenant-session-isolation research doc exists', () => {
-      const docPath = path.join(ROOT, 'docs', 'research', 'multi-tenant-session-isolation-2026-03-14.md');
-      expect(fs.existsSync(docPath)).toBe(true);
-
-      const content = fs.readFileSync(docPath, 'utf8');
-      expect(content).toMatch(/Session Isolation/i);
-      expect(content).toMatch(/Security Boundaries/i);
-      expect(content).toMatch(/Future Persistence/i);
-    });
-  });
 });
