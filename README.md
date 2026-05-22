@@ -1,3 +1,7 @@
+<p align="center">
+  <img src=".github/social-preview.png" alt="EVOKORE-MCP — Multi-Server MCP Aggregator" width="1280" />
+</p>
+
 # EVOKORE-MCP
 
 > Multi-server MCP aggregator with 266 skills, an orchestration runtime, fleet/claims coordination, and hook-driven session governance for autonomous Claude/Cursor/Gemini agent runs.
